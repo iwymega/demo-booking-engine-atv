@@ -3,625 +3,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdventurePro ATV - Premium Boxy Booking Engine</title>
-    <!-- Tailwind CSS -->
+    <title>AdventurePro ATV - Premium Booking Engine</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Space Grotesk for crisp industrial technical feel -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316', /* Premium Safety/Terracotta Orange */
+                            600: '#ea580c',
+                            700: '#c2410c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter for elegant and hyper-readable typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        /* Hide scrollbars */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* --- THEME DESIGN TOKENS (PREMIUM SOPHISTICATED NEUTRAL DESIGN) --- */
-        /* Light Mode (Now Default: Sophisticated, clean, readable) */
-        .theme-light {
-            --bg-app: #f4f5f6; /* Sophisticated warm-gray canvas background */
-            --bg-canvas: #ffffff; /* Crisp pure white cards */
-            --bg-box: #f9fafb; /* Soft light gray for subtle contrasts */
-            --bg-box-alt: #f3f4f6; 
-            --text-main: #111827; /* Rich dark slate for ultimate contrast */
-            --text-sub: #4b5563; /* Medium grey for descriptions */
-            --border-main: #111827; /* Solid sharp dark border */
-            --shadow-main: 4px 4px 0px 0px #111827;
-            --shadow-active: 1px 1px 0px 0px #111827;
-            
-            --color-accent: #ea580c; /* Premium Burnt Orange (Adventure brand accent) */
-            --color-success: #16a34a; /* Safe Dark Green */
-            --color-warning: #d97706; /* Solid Amber */
-
-            --input-bg: #ffffff;
-            --input-text: #111827;
-            --input-border: #111827;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
-        /* Dark Mode (High-contrast charcoal & bright accents) */
-        .theme-dark {
-            --bg-app: #0f172a; /* Slate 900 background */
-            --bg-canvas: #1e293b; /* Slate 800 cards */
-            --bg-box: #334155; /* Slate 700 */
-            --bg-box-alt: #475569;
-            --text-main: #f8fafc; /* Crisp light grey text */
-            --text-sub: #cbd5e1; /* Soft grey text */
-            --border-main: #f8fafc;
-            --shadow-main: 4px 4px 0px 0px #f97316; /* Electric Orange Shadow */
-            --shadow-active: 1px 1px 0px 0px #f97316;
-            
-            --color-accent: #f97316; /* Electric Orange */
-            --color-success: #22c55e; /* Vibrant Green */
-            --color-warning: #eab308; /* Vibrant Yellow */
-
-            --input-bg: #1e293b;
-            --input-text: #f8fafc;
-            --input-border: #f8fafc;
-        }
-
-        /* Applying structural styles globally based on selected theme variables */
-        .bg-custom-app { background-color: var(--bg-app); }
-        .bg-custom-canvas { background-color: var(--bg-canvas); }
-        .bg-custom-box { background-color: var(--bg-box); }
-        .bg-custom-box-alt { background-color: var(--bg-box-alt); }
-        .text-custom-main { color: var(--text-main); }
-        .text-custom-sub { color: var(--text-sub); }
-        .border-custom { border-width: 2.5px; border-style: solid; border-color: var(--border-main); }
-        .border-accent { border-color: var(--color-accent); }
-        
-        /* Input elements configuration */
-        .input-custom {
-            background-color: var(--input-bg);
-            color: var(--input-text);
-            border: 2.5px solid var(--input-border);
+        /* Smooth Custom Transitions */
+        .fade-enter {
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         
-        /* Boxy flat card layout */
-        .boxy-card {
-            background-color: var(--bg-canvas);
-            border: 2.5px solid var(--border-main);
-            box-shadow: var(--shadow-main);
-            transition: all 0.1s ease-in-out;
-        }
-        
-        /* Highlighted/selected state */
-        .boxy-card-active {
-            background-color: var(--bg-canvas);
-            border: 2.5px solid var(--color-accent) !important;
-            box-shadow: 4px 4px 0px 0px var(--color-accent) !important;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Press animation for premium feedback */
-        .boxy-btn-push:active {
-            transform: translate(2px, 2px);
-            box-shadow: var(--shadow-active) !important;
-        }
-
-        ::selection {
-            background-color: var(--color-accent);
-            color: #ffffff;
+        /* Hide standard input date calendar icon style overrides */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background-color: transparent;
+            cursor: pointer;
+            padding: 2px;
         }
     </style>
 </head>
-<body class="text-stone-900 min-h-screen flex flex-col items-center justify-start antialiased pb-28 theme-light bg-custom-app">
+<body class="text-slate-800 min-h-screen flex flex-col items-center justify-start antialiased pb-28 light bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
 
-    <!-- Primary Application Window: Mobile Frame Constraint (No-round boxy structure) -->
-    <div id="app" class="w-full max-w-md min-h-screen relative flex flex-col justify-between overflow-hidden border-x-[3px] border-black bg-custom-canvas text-custom-main">
+    <div id="app" class="w-full max-w-md min-h-screen md:min-h-[850px] md:my-6 md:rounded md:shadow-2xl md:border relative flex flex-col justify-between overflow-hidden bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 transition-all duration-300">
         
-        <!-- Header Branding and Theme Controls -->
-        <header class="px-6 pt-6 pb-4 flex flex-col gap-4 z-10 border-b-[3px] border-black bg-custom-canvas">
+        <!-- Header: Clean, minimalist with modern brand styling -->
+        <header class="px-6 pt-6 pb-4 flex flex-col gap-3 z-10 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0">
             <div class="flex justify-between items-center">
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 bg-black"></span>
-                        <span class="text-[9px] uppercase tracking-widest font-extrabold text-custom-sub">PREMIUM OUTDOOR</span>
+                        <span class="w-2 h-2 rounded bg-brand-500 animate-pulse"></span>
+                        <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-slate-500">Premium Outdoors</span>
                     </div>
-                    <h1 class="text-2xl font-black tracking-tighter text-custom-main mt-0.5">
-                        ADVENTURE<span class="text-[var(--color-accent)]">PRO</span>
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-0.5">
+                        ADVENTURE<span class="text-brand-500">PRO</span>
                     </h1>
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <!-- Elegant theme switch button -->
-                    <button onclick="toggleThemeMode()" class="bg-custom-box text-custom-main p-2.5 border-2 border-black hover:bg-neutral-200 active:translate-y-0.5 transition-all text-xs font-black flex items-center justify-center rounded-none" title="Ubah Tema">
-                        <span id="theme-icon">🌙</span>
+                    <!-- Theme Toggle Switcher -->
+                    <button onclick="toggleTheme()" class="bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 w-9 h-9 rounded transition-all flex items-center justify-center border border-slate-100 dark:border-slate-700" title="Ubah Tema">
+                        <span id="theme-icon" class="text-sm">🌙</span>
                     </button>
                     
-                    <!-- Internal Administrator Panel trigger -->
-                    <button onclick="toggleAdminPanel()" class="bg-black text-white p-2.5 border-2 border-black hover:bg-stone-800 active:translate-y-0.5 transition-all text-xs font-black flex items-center gap-1 rounded-none">
+                    <!-- Hidden Operator Switcher -->
+                    <button onclick="toggleAdminPanel()" class="bg-slate-900 dark:bg-slate-50 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-950 px-3 h-9 rounded transition-all text-[11px] font-semibold flex items-center gap-1">
                         ⚙️ Admin
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- Wizard Navigation Step Tracker -->
-        <div class="px-6 mb-2 mt-4 z-10" id="step-tracker-container">
-            <div class="flex justify-between items-center bg-custom-box border-2.5 border-black p-1 relative">
-                <div id="step-indicator" class="absolute top-1 bottom-1 left-1 w-[24%] bg-black transition-all duration-300 ease-out z-0"></div>
-                <button onclick="goToStep(1)" class="flex-1 text-center py-2 text-[11px] font-black z-10 transition-all text-white rounded-none" id="nav-step-1">1. Paket</button>
-                <button onclick="goToStep(2)" class="flex-1 text-center py-2 text-[11px] font-black z-10 transition-all text-custom-sub rounded-none" id="nav-step-2">2. Desain</button>
-                <button onclick="goToStep(3)" class="flex-1 text-center py-2 text-[11px] font-black z-10 transition-all text-custom-sub rounded-none" id="nav-step-3">3. Slot</button>
-                <button onclick="goToStep(4)" class="flex-1 text-center py-2 text-[11px] font-black z-10 transition-all text-custom-sub rounded-none" id="nav-step-4">4. Detail</button>
+        <div class="px-6 mt-4 z-10" id="step-tracker-container">
+            <div class="flex justify-between items-center bg-slate-50 dark:bg-slate-950/50 rounded p-1.5 relative border border-slate-100 dark:border-slate-900">
+                <div id="step-indicator" class="absolute top-1.5 bottom-1.5 left-1.5 w-[22%] bg-brand-500 rounded transition-all duration-300 ease-out z-0 shadow-lg shadow-brand-500/20"></div>
+                <button onclick="goToStep(1)" class="flex-1 text-center py-2 text-[11px] font-bold z-10 transition-all text-white rounded" id="nav-step-1">Paket</button>
+                <button onclick="goToStep(2)" class="flex-1 text-center py-2 text-[11px] font-bold z-10 transition-all text-slate-400 dark:text-slate-500 rounded" id="nav-step-2">Kustom</button>
+                <button onclick="goToStep(3)" class="flex-1 text-center py-2 text-[11px] font-bold z-10 transition-all text-slate-400 dark:text-slate-500 rounded" id="nav-step-3">Jadwal</button>
+                <button onclick="goToStep(4)" class="flex-1 text-center py-2 text-[11px] font-bold z-10 transition-all text-slate-400 dark:text-slate-500 rounded" id="nav-step-4">Detail</button>
             </div>
         </div>
 
-        <!-- Dynamic Main Form Canvas Area -->
-        <main class="flex-1 px-6 z-10 pb-8 mt-2">
+        <main class="flex-1 px-6 z-10 pb-8 mt-4 overflow-y-auto">
 
             <!-- STEP 1: CHOOSE ACTIVITY PACKAGE -->
-            <div id="step-1" class="space-y-5">
-                <div class="text-left border-l-4 border-[var(--color-accent)] pl-3.5 py-1 bg-custom-box/50 border-y border-r border-black p-2.5">
-                    <p class="text-[9px] font-black uppercase tracking-widest text-custom-sub">Langkah 1</p>
-                    <h2 class="text-xl font-black tracking-tight uppercase">PILIH PETUALANGAN</h2>
-                    <p class="text-custom-sub text-xs mt-0.5">Rasakan medan rintangan ekstrem bersertifikat aman</p>
+            <div id="step-1" class="space-y-4 fade-enter">
+                <div class="text-left py-1">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500">PILIHAN TERBAIK</p>
+                    <h2 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-0.5">PILIH PETUALANGAN ATV</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Nikmati rute menantang dengan standar keselamatan internasional</p>
                 </div>
 
-                <!-- Package Cards Layout -->
+                <!-- Beautiful Modern Activity Cards -->
                 <div class="space-y-4">
-                    <!-- Package Card 1 -->
-                    <div id="pkg-1" onclick="selectPackage(1, 'Mud Volcano Thrill', 350000, 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&q=80&w=600')" class="activity-card boxy-card cursor-pointer transform hover:-translate-y-0.5 active:translate-x-0.5 transition-all duration-150 rounded-none bg-custom-canvas">
-                        <div class="h-44 w-full relative border-b-2.5 border-black">
-                            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&q=80&w=600" alt="Mud Volcano ATV" class="w-full h-full object-cover">
-                            <!-- Premium Flat Badge -->
-                            <div class="absolute top-3 left-3 bg-black text-white text-[9px] font-black px-2.5 py-1 border border-white rounded-none">
-                                🔥 TERPOPULER
+                    <!-- Activity Card 1 -->
+                    <div id="pkg-1" onclick="selectPackage(1, 'Mud Volcano Thrill', 350000, 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&q=80&w=600')" class="activity-card group bg-white dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-800 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300">
+                        <div class="h-44 w-full relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&q=80&w=600" alt="Mud Volcano ATV" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
+                            <div class="absolute top-3 left-3 bg-brand-500 text-white text-[9px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
+                                Terpopuler
                             </div>
-                            <div class="absolute bottom-3 right-3 bg-white text-black text-[10px] font-extrabold px-2 py-1 border border-black rounded-none flex items-center gap-1">
-                                ★ 4.9 (480 Ulasan)
+                            <div class="absolute bottom-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-800 dark:text-white text-[10px] font-bold px-2.5 py-1 rounded flex items-center gap-1 shadow-sm">
+                                ⭐ 4.9 <span class="text-slate-400 font-medium">(480 ulasan)</span>
                             </div>
                         </div>
-                        <div class="p-4 bg-custom-canvas">
+                        <div class="p-4">
                             <div class="flex justify-between items-start gap-2">
                                 <div>
-                                    <h3 class="text-lg font-black tracking-tight uppercase leading-tight text-custom-main">Mud Volcano Thrill</h3>
-                                    <p class="text-[10px] text-custom-sub mt-1 font-bold">
-                                        ⏱ 1.5 JAM • <span class="bg-[var(--color-accent)] text-white px-1.5 py-0.5 border border-black text-[8px] uppercase font-black">EKSTREM</span>
+                                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">Mud Volcano Thrill</h3>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 font-semibold flex items-center gap-1.5">
+                                        ⏱️ 1.5 JAM • <span class="text-brand-500 font-bold">LUMPUR EKSTREM</span>
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-custom-sub text-[9px] line-through font-extrabold">Rp 450k</p>
-                                    <p class="text-lg font-black text-[var(--color-accent)] tracking-tight">Rp 350k<span class="text-xs font-normal text-custom-sub">/pax</span></p>
+                                    <p class="text-slate-400 dark:text-slate-500 text-[10px] line-through">Rp 450k</p>
+                                    <p class="text-base font-extrabold text-brand-500 tracking-tight">Rp 350k<span class="text-[10px] font-normal text-slate-400">/pax</span></p>
                                 </div>
                             </div>
-                            <p class="text-xs text-custom-sub mt-3 border-t-2 border-black pt-2.5 leading-relaxed">
-                                Jelajahi rute lumpur pekat vulkanik, rintangan bukit terjal, jembatan kayu, dan lintasan sungai menantang.
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2.5 border-t border-slate-50 dark:border-slate-800/60 pt-2.5 leading-relaxed">
+                                Pacu adrenalin melewati kubangan lumpur vulkanik alami, bukit terjal, jembatan gantung, dan rute hutan basah.
                             </p>
                         </div>
                     </div>
 
-                    <!-- Package Card 2 -->
-                    <div id="pkg-2" onclick="selectPackage(2, 'Waterfall Cave Descent', 450000, 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600')" class="activity-card boxy-card cursor-pointer transform hover:-translate-y-0.5 active:translate-x-0.5 transition-all duration-150 rounded-none bg-custom-canvas">
-                        <div class="h-44 w-full relative border-b-2.5 border-black">
-                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600" alt="Waterfall Cave Descent" class="w-full h-full object-cover">
-                            <div class="absolute top-3 left-3 bg-black text-white text-[9px] font-black px-2.5 py-1 border border-white rounded-none">
-                                🌿 REKOMENDASI ALAM
+                    <!-- Activity Card 2 -->
+                    <div id="pkg-2" onclick="selectPackage(2, 'Waterfall Cave Descent', 450000, 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600')" class="activity-card group bg-white dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-800 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300">
+                        <div class="h-44 w-full relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600" alt="Waterfall Cave Descent" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
+                            <div class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-md">
+                                Rekomendasi
                             </div>
-                            <div class="absolute bottom-3 right-3 bg-white text-black text-[10px] font-extrabold px-2 py-1 border border-black rounded-none flex items-center gap-1">
-                                ★ 4.8 (212 Ulasan)
+                            <div class="absolute bottom-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-800 dark:text-white text-[10px] font-bold px-2.5 py-1 rounded flex items-center gap-1 shadow-sm">
+                                ⭐ 4.8 <span class="text-slate-400 font-medium">(212 ulasan)</span>
                             </div>
                         </div>
-                        <div class="p-4 bg-custom-canvas">
+                        <div class="p-4">
                             <div class="flex justify-between items-start gap-2">
                                 <div>
-                                    <h3 class="text-lg font-black tracking-tight uppercase leading-tight text-custom-main">Waterfall & Cave</h3>
-                                    <p class="text-[10px] text-custom-sub mt-1 font-bold">
-                                        ⏱ 2.5 JAM • <span class="bg-emerald-600 text-white px-1.5 py-0.5 border border-black text-[8px] uppercase font-black">SEDANG</span>
+                                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">Waterfall & Cave Descent</h3>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 font-semibold flex items-center gap-1.5">
+                                        ⏱️ 2.5 JAM • <span class="text-emerald-600 font-bold">ALAM & GUA</span>
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-custom-sub text-[9px] line-through font-extrabold">Rp 550k</p>
-                                    <p class="text-lg font-black text-[var(--color-accent)] tracking-tight">Rp 450k<span class="text-xs font-normal text-custom-sub">/pax</span></p>
+                                    <p class="text-slate-400 dark:text-slate-500 text-[10px] line-through">Rp 550k</p>
+                                    <p class="text-base font-extrabold text-brand-500 tracking-tight">Rp 450k<span class="text-[10px] font-normal text-slate-400">/pax</span></p>
                                 </div>
                             </div>
-                            <p class="text-xs text-custom-sub mt-3 border-t-2 border-black pt-2.5 leading-relaxed">
-                                Petualangan menembus air terjun alami, rimbunnya hutan liar tropis, serta gua basah sepanjang 100 meter.
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2.5 border-t border-slate-50 dark:border-slate-800/60 pt-2.5 leading-relaxed">
+                                Petualangan eksotis menembus rimbunnya hutan tropis Bali, menjelajahi gua kuno alami, dan meluncur tepat di bawah derasnya air terjun.
                             </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trust Factor Testimony Block -->
-                <div class="pt-4 border-t-2 border-black">
-                    <p class="text-[10px] font-black text-custom-sub uppercase tracking-wider mb-2">ULASAN TERVERIFIKASI</p>
-                    <div class="boxy-card p-4 text-left rounded-none relative bg-custom-canvas">
-                        <p class="text-xs text-custom-sub leading-relaxed font-bold italic">
-                            "Jalur berlumpurnya luar biasa seru! Adrenalin benar-benar terpacu. Proses booking dan tiket QR sangat ringkas!"
-                        </p>
-                        <div class="mt-2 flex items-center gap-1.5">
-                            <span class="text-[var(--color-accent)] text-xs font-black">★★★★★</span>
-                            <span class="text-[9px] text-custom-main font-black">— RIAN D., JAKARTA</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- STEP 2: CUSTOMIZE & ADD-ONS -->
-            <div id="step-2" class="space-y-5 hidden">
-                <div class="text-left border-l-4 border-[var(--color-accent)] pl-3.5 py-1 bg-custom-box/50 border-y border-r border-black p-2.5">
-                    <p class="text-[9px] font-black uppercase tracking-widest text-custom-sub">Langkah 2</p>
-                    <h2 class="text-xl font-black uppercase tracking-tight">KONFIGURASI BERKENDARA</h2>
-                    <p class="text-custom-sub text-xs mt-0.5">Tentukan jenis mengemudi dan penunjang aktivitas</p>
+            <!-- STEP 2: RIDE CUSTOMIZATION & ADDONS -->
+            <div id="step-2" class="space-y-4 hidden fade-enter">
+                <div class="text-left py-1">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500">KONFIGURASI</p>
+                    <h2 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-0.5">SESUAIKAN BERKENDARA</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Tentukan jenis kendaraan dan pelengkap petualangan Anda</p>
                 </div>
 
-                <!-- Current Selection Info Header -->
-                <div class="boxy-card p-3 flex items-center gap-3 rounded-none bg-custom-canvas">
-                    <img id="selected-activity-img" src="" class="w-16 h-16 object-cover border border-black rounded-none">
+                <!-- Selected Activity Mini Preview Card -->
+                <div class="bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-3 rounded flex items-center gap-3">
+                    <img id="selected-activity-img" src="" class="w-16 h-16 object-cover rounded shadow-sm">
                     <div>
-                        <span class="text-[8px] bg-[var(--color-accent)] text-white px-2 py-0.5 font-black uppercase border border-black rounded-none">Aktivitas Pilihan</span>
-                        <h4 id="selected-activity-title" class="text-sm font-black mt-1 uppercase tracking-tight leading-none text-custom-main">Mud Volcano</h4>
-                        <p class="text-xs text-custom-sub mt-0.5">Base Price: <span id="selected-activity-base" class="text-[var(--color-accent)] font-black"></span></p>
+                        <span class="text-[8px] bg-brand-500/10 text-brand-500 px-2 py-0.5 font-bold uppercase rounded">Paket Dipilih</span>
+                        <h4 id="selected-activity-title" class="text-sm font-extrabold mt-1 text-slate-900 dark:text-white">ATV Ride</h4>
+                        <p class="text-[11px] text-slate-400 dark:text-slate-500">Harga dasar: <span id="selected-activity-base" class="text-brand-500 font-bold"></span></p>
                     </div>
                 </div>
 
-                <!-- Ride Mode Configuration (Single vs Tandem) -->
+                <!-- Ride Mode Grid Selection (Single vs Tandem) -->
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-custom-sub">Gaya Berkendara</label>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pilih Gaya Berkendara</label>
                     <div class="grid grid-cols-2 gap-3">
-                        <!-- Single Ride Choice Card -->
-                        <div id="mode-single" onclick="setRideMode('single')" class="boxy-card p-3 cursor-pointer text-center flex flex-col justify-between h-32 rounded-none bg-custom-canvas">
-                            <div class="mx-auto bg-custom-box border border-black p-1.5 w-8 h-8 flex items-center justify-center rounded-none">
+                        <!-- Single Ride -->
+                        <div id="mode-single" onclick="setRideMode('single')" class="bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer text-center flex flex-col justify-between h-32 hover:shadow-md transition-all duration-300">
+                            <div class="mx-auto bg-slate-50 dark:bg-slate-800 w-9 h-9 rounded flex items-center justify-center text-sm">
                                 👤
                             </div>
                             <div>
-                                <h4 class="font-black text-xs uppercase text-custom-main">Single Ride</h4>
-                                <p class="text-[8px] text-custom-sub mt-0.5">1 Motor, 1 Orang</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Single Ride</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500">1 Motor, 1 Orang</p>
                             </div>
-                            <span class="text-[10px] font-black text-[var(--color-accent)] uppercase">HARGA NORMAL</span>
+                            <span class="text-[10px] font-bold text-brand-500 uppercase mt-1">Normal</span>
                         </div>
                         
-                        <!-- Tandem Ride Choice Card -->
-                        <div id="mode-tandem" onclick="setRideMode('tandem')" class="boxy-card p-3 cursor-pointer text-center flex flex-col justify-between h-32 rounded-none bg-custom-canvas">
-                            <div class="mx-auto bg-custom-box border border-black p-1.5 w-8 h-8 flex items-center justify-center rounded-none">
+                        <!-- Tandem Ride -->
+                        <div id="mode-tandem" onclick="setRideMode('tandem')" class="bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer text-center flex flex-col justify-between h-32 hover:shadow-md transition-all duration-300">
+                            <div class="mx-auto bg-slate-50 dark:bg-slate-800 w-9 h-9 rounded flex items-center justify-center text-sm">
                                 👥
                             </div>
                             <div>
-                                <h4 class="font-black text-xs uppercase text-custom-main">Tandem Ride</h4>
-                                <p class="text-[8px] text-custom-sub mt-0.5">1 Motor, 2 Orang</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Tandem Ride</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500">1 Motor, 2 Orang</p>
                             </div>
-                            <span class="text-[10px] font-black text-[var(--color-accent)] uppercase">+Rp 150.000</span>
+                            <span class="text-[10px] font-bold text-brand-500 uppercase mt-1">+Rp 150.000</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Interactive ATV Quantities Slider -->
-                <div class="flex justify-between items-center boxy-card p-3.5 rounded-none bg-custom-canvas">
+                <!-- Modern Interactive Quantity Counter -->
+                <div class="flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded">
                     <div>
-                        <h4 class="font-black text-xs uppercase text-custom-main">Jumlah Unit ATV</h4>
-                        <p class="text-[8px] text-custom-sub font-bold">Pesan > 5 dapat diskon otomatis!</p>
+                        <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Jumlah Unit ATV</h4>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500">Sesuaikan kuota dengan rombongan Anda</p>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button onclick="changeQty(-1)" class="w-8 h-8 bg-custom-box text-black border border-black text-sm font-black hover:bg-neutral-200 active:translate-y-0.5 flex items-center justify-center rounded-none">-</button>
-                        <span id="qty-counter" class="text-base font-black w-8 text-center text-custom-main">1</span>
-                        <button onclick="changeQty(1)" class="w-8 h-8 bg-black text-white border border-black text-sm font-black hover:bg-stone-800 active:translate-y-0.5 flex items-center justify-center rounded-none">+</button>
+                        <button onclick="changeQty(-1)" class="w-8 h-8 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded font-bold flex items-center justify-center transition-all">-</button>
+                        <span id="qty-counter" class="text-sm font-black w-8 text-center text-slate-900 dark:text-white">1</span>
+                        <button onclick="changeQty(1)" class="w-8 h-8 bg-brand-500 hover:bg-brand-600 text-white rounded font-bold flex items-center justify-center transition-all shadow-md shadow-brand-500/10">+</button>
                     </div>
                 </div>
 
-                <!-- Dynamic Gear Add-ons list -->
+                <!-- Extra Add-ons Selection -->
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-custom-sub">Ekstra Tambahan (Opsional)</label>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Layanan Tambahan (Opsional)</label>
                     <div class="space-y-2">
-                        <!-- GoPro Rental -->
-                        <div onclick="toggleAddon('gopro', 100000)" class="addon-row flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
-                            <div class="flex items-center gap-2.5">
-                                <input type="checkbox" id="addon-gopro-chk" class="w-4 h-4 rounded-none accent-black bg-custom-canvas border border-black pointer-events-none">
+                        <!-- Addon GoPro -->
+                        <div onclick="toggleAddon('gopro', 100000)" class="addon-row flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-3.5 rounded cursor-pointer hover:shadow-md transition-all duration-300">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="addon-gopro-chk" class="w-4 h-4 rounded accent-brand-500 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 pointer-events-none">
                                 <div>
-                                    <h4 class="font-black text-xs uppercase text-custom-main">Sewa GoPro Hero 11</h4>
-                                    <p class="text-[8px] text-custom-sub">Dokumentasi video (Bonus memori 32GB)</p>
+                                    <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Sewa GoPro Hero 11</h4>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500">Video resolusi 4K & gratis MicroSD 32GB</p>
                                 </div>
                             </div>
-                            <span class="text-xs font-black text-custom-main">+Rp 100k</span>
+                            <span class="text-xs font-black text-brand-500">+Rp 100k</span>
                         </div>
                         
-                        <!-- Protective mudwear -->
-                        <div onclick="toggleAddon('mudsuit', 35000)" class="addon-row flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
-                            <div class="flex items-center gap-2.5">
-                                <input type="checkbox" id="addon-mudsuit-chk" class="w-4 h-4 rounded-none accent-black bg-custom-canvas border border-black pointer-events-none">
+                        <!-- Addon Mudsuit -->
+                        <div onclick="toggleAddon('mudsuit', 35000)" class="addon-row flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-3.5 rounded cursor-pointer hover:shadow-md transition-all duration-300">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="addon-mudsuit-chk" class="w-4 h-4 rounded accent-brand-500 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 pointer-events-none">
                                 <div>
-                                    <h4 class="font-black text-xs uppercase text-custom-main">Pelindung & Boots Premium</h4>
-                                    <p class="text-[8px] text-custom-sub">Wearpack anti-lumpur dan sepatu boots karet</p>
+                                    <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Baju Pelindung & Sepatu Boots</h4>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500">Pakaian anti air, anti kotor, dan boots karet</p>
                                 </div>
                             </div>
-                            <span class="text-xs font-black text-custom-main">+Rp 35k</span>
+                            <span class="text-xs font-black text-brand-500">+Rp 35k</span>
                         </div>
 
-                        <!-- Buffet Lunch addition -->
-                        <div onclick="toggleAddon('lunch', 75000)" class="addon-row flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
-                            <div class="flex items-center gap-2.5">
-                                <input type="checkbox" id="addon-lunch-chk" class="w-4 h-4 rounded-none accent-black bg-custom-canvas border border-black pointer-events-none">
+                        <!-- Addon Lunch -->
+                        <div onclick="toggleAddon('lunch', 75000)" class="addon-row flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-3.5 rounded cursor-pointer hover:shadow-md transition-all duration-300">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="addon-lunch-chk" class="w-4 h-4 rounded accent-brand-500 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 pointer-events-none">
                                 <div>
-                                    <h4 class="font-black text-xs uppercase text-custom-main">Makan Siang Prasmanan</h4>
-                                    <p class="text-[8px] text-custom-sub">Buffet prasmanan khas setelah selesai berkendara</p>
+                                    <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Makan Siang Prasmanan</h4>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500">Sajian masakan lokal bergizi setelah beraktivitas</p>
                                 </div>
                             </div>
-                            <span class="text-xs font-black text-custom-main">+Rp 75k</span>
+                            <span class="text-xs font-black text-brand-500">+Rp 75k</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- STEP 3: PICK DATE & SESSION -->
-            <div id="step-3" class="space-y-5 hidden">
-                <div class="text-left border-l-4 border-[var(--color-accent)] pl-3.5 py-1 bg-custom-box/50 border-y border-r border-black p-2.5">
-                    <p class="text-[9px] font-black uppercase tracking-widest text-custom-sub">Langkah 3</p>
-                    <h2 class="text-xl font-black uppercase tracking-tight">TANGGAL & SESI</h2>
-                    <p class="text-custom-sub text-xs mt-0.5">Pilih jadwal petualangan yang dikehendaki</p>
+            <div id="step-3" class="space-y-4 hidden fade-enter">
+                <div class="text-left py-1">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500">WAKTU</p>
+                    <h2 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-0.5">TANGGAL & SESI JALUR</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Tentukan waktu yang tepat untuk petualangan Anda</p>
                 </div>
 
-                <!-- Calendar Slider grid selection -->
+                <!-- Modern Standard Date Picker Interface -->
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-custom-sub">Pilih Hari Pemesanan</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <!-- Six dates configuration starting today (June 19 to 24) -->
-                        <div onclick="selectDate('19', 'Jumat', false)" id="date-19" class="date-box boxy-card p-2.5 text-center cursor-pointer rounded-none bg-custom-canvas hover:border-[var(--color-accent)] transition-all">
-                            <p class="text-[8px] text-custom-sub font-black uppercase">Hari Ini</p>
-                            <p class="text-base font-black mt-0.5 text-custom-main">19 Jun</p>
-                        </div>
-                        <div onclick="selectDate('20', 'Sabtu', true)" id="date-20" class="date-box boxy-card p-2.5 text-center cursor-pointer rounded-none bg-custom-canvas hover:border-[var(--color-accent)] transition-all">
-                            <p class="text-[8px] text-[var(--color-accent)] font-black uppercase">Sabtu</p>
-                            <p class="text-base font-black mt-0.5 text-custom-main">20 Jun</p>
-                        </div>
-                        <div onclick="selectDate('21', 'Minggu', true)" id="date-21" class="date-box boxy-card p-2.5 text-center cursor-pointer rounded-none bg-custom-canvas hover:border-[var(--color-accent)] transition-all">
-                            <p class="text-[8px] text-[var(--color-accent)] font-black uppercase">Minggu</p>
-                            <p class="text-base font-black mt-0.5 text-custom-main">21 Jun</p>
-                        </div>
-                        <div onclick="selectDate('22', 'Senin', false)" id="date-22" class="date-box boxy-card p-2.5 text-center cursor-pointer rounded-none bg-custom-canvas hover:border-[var(--color-accent)] transition-all">
-                            <p class="text-[8px] text-custom-sub font-black uppercase">Senin</p>
-                            <p class="text-base font-black mt-0.5 text-custom-main">22 Jun</p>
-                        </div>
-                        <div onclick="selectDate('23', 'Selasa', false)" id="date-23" class="date-box boxy-card p-2.5 text-center cursor-pointer rounded-none bg-custom-canvas hover:border-[var(--color-accent)] transition-all">
-                            <p class="text-[8px] text-custom-sub font-black uppercase">Selasa</p>
-                            <p class="text-base font-black mt-0.5 text-custom-main">23 Jun</p>
-                        </div>
-                        <div onclick="selectDate('24', 'Rabu', false)" id="date-24" class="date-box boxy-card p-2.5 text-center cursor-pointer rounded-none bg-custom-canvas hover:border-[var(--color-accent)] transition-all">
-                            <p class="text-[8px] text-custom-sub font-black uppercase">Rabu</p>
-                            <p class="text-base font-black mt-0.5 text-custom-main">24 Jun</p>
+                    <label for="booking-date" class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pilih Tanggal Kegiatan</label>
+                    <div class="relative bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded p-4 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-3 w-full">
+                            <span class="text-lg">📅</span>
+                            <input type="date" id="booking-date" onchange="handleDateSelect(this.value)" class="w-full bg-transparent border-0 text-sm focus:outline-none font-bold text-slate-800 dark:text-white placeholder-slate-400">
                         </div>
                     </div>
+                    <div id="date-helper-msg" class="text-[10px] font-bold uppercase tracking-wide hidden px-2"></div>
                 </div>
 
-                <!-- 5 Simplified Sessions Selector -->
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-custom-sub">Pilih Sesi Operasional</label>
-                    <div class="grid grid-cols-1 gap-2">
+                <!-- 5 Simple Sessions Grid -->
+                <div class="space-y-2 pt-2">
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pilih Sesi Operasional</label>
+                    <div class="grid grid-cols-1 gap-2.5">
                         <!-- Sesi 1 -->
-                        <div onclick="selectTimeSlot('sesi1', 'Sesi 1')" id="slot-sesi1" class="time-slot flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
+                        <div onclick="selectTimeSlot('sesi1', 'Sesi 1')" id="slot-sesi1" class="time-slot flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer hover:shadow-md transition-all duration-300">
                             <div>
-                                <h4 class="font-extrabold text-xs uppercase tracking-wide text-custom-main">Sesi 1</h4>
-                                <p class="text-[9px] text-custom-sub mt-0.5">08:00 - 10:00 WITA</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Sesi 1</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">🌅 Pagi Terang • 08:00 - 10:00 WITA</p>
                             </div>
+                            <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded font-bold uppercase">Tersedia</span>
                         </div>
                         <!-- Sesi 2 -->
-                        <div onclick="selectTimeSlot('sesi2', 'Sesi 2')" id="slot-sesi2" class="time-slot flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
+                        <div onclick="selectTimeSlot('sesi2', 'Sesi 2')" id="slot-sesi2" class="time-slot flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer hover:shadow-md transition-all duration-300">
                             <div>
-                                <h4 class="font-extrabold text-xs uppercase tracking-wide text-custom-main">Sesi 2</h4>
-                                <p class="text-[9px] text-custom-sub mt-0.5">10:00 - 12:00 WITA</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Sesi 2</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">☀️ Pagi Hangat • 10:00 - 12:00 WITA</p>
                             </div>
+                            <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded font-bold uppercase">Tersedia</span>
                         </div>
                         <!-- Sesi 3 -->
-                        <div onclick="selectTimeSlot('sesi3', 'Sesi 3')" id="slot-sesi3" class="time-slot flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
+                        <div onclick="selectTimeSlot('sesi3', 'Sesi 3')" id="slot-sesi3" class="time-slot flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer hover:shadow-md transition-all duration-300">
                             <div>
-                                <h4 class="font-extrabold text-xs uppercase tracking-wide text-custom-main">Sesi 3</h4>
-                                <p class="text-[9px] text-custom-sub mt-0.5">13:00 - 15:00 WITA</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Sesi 3</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">🌤️ Siang Teduh • 13:00 - 15:00 WITA</p>
                             </div>
+                            <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded font-bold uppercase">Tersedia</span>
                         </div>
                         <!-- Sesi 4 -->
-                        <div onclick="selectTimeSlot('sesi4', 'Sesi 4')" id="slot-sesi4" class="time-slot flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
+                        <div onclick="selectTimeSlot('sesi4', 'Sesi 4')" id="slot-sesi4" class="time-slot flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer hover:shadow-md transition-all duration-300">
                             <div>
-                                <h4 class="font-extrabold text-xs uppercase tracking-wide text-custom-main">Sesi 4</h4>
-                                <p class="text-[9px] text-custom-sub mt-0.5">15:00 - 17:00 WITA</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Sesi 4</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">🌥️ Sore Sejuk • 15:00 - 17:00 WITA</p>
                             </div>
+                            <span class="text-[9px] bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 px-2.5 py-1 rounded font-bold uppercase">Sisa 2 Slot</span>
                         </div>
                         <!-- Sesi 5 -->
-                        <div onclick="selectTimeSlot('sesi5', 'Sesi 5')" id="slot-sesi5" class="time-slot flex justify-between items-center boxy-card p-3 cursor-pointer rounded-none bg-custom-canvas hover:bg-custom-box/50">
+                        <div onclick="selectTimeSlot('sesi5', 'Sesi 5')" id="slot-sesi5" class="time-slot flex justify-between items-center bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded cursor-pointer hover:shadow-md transition-all duration-300">
                             <div>
-                                <h4 class="font-extrabold text-xs uppercase tracking-wide text-custom-main">Sesi 5</h4>
-                                <p class="text-[9px] text-custom-sub mt-0.5">17:00 - 19:00 WITA</p>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">Sesi 5</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">🌇 Matahari Terbenam • 17:00 - 19:00 WITA</p>
                             </div>
+                            <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded font-bold uppercase">Tersedia</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- STEP 4: CONTACT & SECURE CHECKOUT -->
-            <div id="step-4" class="space-y-5 hidden">
-                <div class="text-left border-l-4 border-[var(--color-accent)] pl-3.5 py-1 bg-custom-box/50 border-y border-r border-black p-2.5">
-                    <p class="text-[9px] font-black uppercase tracking-widest text-custom-sub">Langkah 4</p>
-                    <h2 class="text-xl font-black uppercase tracking-tight">INFORMASI KONTAK</h2>
-                    <p class="text-custom-sub text-xs mt-0.5">Validasi e-ticket akan secara otomatis dikirim ke kontak di bawah</p>
+            <!-- STEP 4: GUEST INFORMATION & SECURE CHECKOUT -->
+            <div id="step-4" class="space-y-4 hidden fade-enter">
+                <div class="text-left py-1">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500">DATA DIRI</p>
+                    <h2 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-0.5">KONFIRMASI AKHIR</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Mohon lengkapi formulir validasi tiket elektronik di bawah ini</p>
                 </div>
 
-                <!-- Input client form -->
-                <div class="boxy-card p-4 space-y-3 rounded-none bg-custom-canvas">
+                <!-- Clean Form Inputs -->
+                <div class="bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 space-y-4 rounded">
                     <div>
-                        <label class="block text-custom-sub text-[10px] font-black mb-1.5 uppercase tracking-wider">Nama Lengkap Pemesan</label>
-                        <input type="text" id="cust-name" placeholder="NAMA LENGKAP" class="w-full input-custom px-3.5 py-2.5 text-xs focus:outline-none focus:border-[var(--color-accent)] font-bold rounded-none placeholder-stone-400 uppercase">
+                        <label class="block text-slate-400 dark:text-slate-500 text-[10px] font-bold mb-1.5 uppercase tracking-wide">Nama Lengkap Pemesan</label>
+                        <input type="text" id="cust-name" placeholder="NAMA SESUAI KTP" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded px-4 py-3 text-xs focus:outline-none focus:border-brand-500 font-bold tracking-wide uppercase text-slate-800 dark:text-white transition">
                     </div>
                     <div>
-                        <label class="block text-custom-sub text-[10px] font-black mb-1.5 uppercase tracking-wider">Nomor WhatsApp Aktif</label>
-                        <input type="tel" id="cust-phone" placeholder="CONTOH: 081234567890" class="w-full input-custom px-3.5 py-2.5 text-xs focus:outline-none focus:border-[var(--color-accent)] font-bold rounded-none placeholder-stone-400">
+                        <label class="block text-slate-400 dark:text-slate-500 text-[10px] font-bold mb-1.5 uppercase tracking-wide">Nomor WhatsApp</label>
+                        <input type="tel" id="cust-phone" placeholder="CONTOH: 081234567890" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded px-4 py-3 text-xs focus:outline-none focus:border-brand-500 font-bold tracking-wide text-slate-800 dark:text-white transition">
                     </div>
                     <div>
-                        <label class="block text-custom-sub text-[10px] font-black mb-1.5 uppercase tracking-wider">Alamat Email Aktif</label>
-                        <input type="email" id="cust-email" placeholder="CONTOH: NAMA@EMAIL.COM" class="w-full input-custom px-3.5 py-2.5 text-xs focus:outline-none focus:border-[var(--color-accent)] font-bold rounded-none placeholder-stone-400 uppercase">
+                        <label class="block text-slate-400 dark:text-slate-500 text-[10px] font-bold mb-1.5 uppercase tracking-wide">Alamat Email Aktif</label>
+                        <input type="email" id="cust-email" placeholder="CONTOH: NAMA@EMAIL.COM" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded px-4 py-3 text-xs focus:outline-none focus:border-brand-500 font-bold tracking-wide uppercase text-slate-800 dark:text-white transition">
                     </div>
                 </div>
 
-                <!-- Promo Coupon activation block -->
-                <div class="boxy-card p-3 flex gap-2 items-center rounded-none bg-custom-canvas">
-                    <input type="text" id="coupon-code" placeholder="KODE PROMO?" class="flex-1 input-custom px-3 py-2.5 text-xs uppercase font-black focus:outline-none focus:border-[var(--color-accent)] rounded-none placeholder-stone-400">
-                    <button onclick="applyCoupon()" class="bg-black text-white border-2 border-black px-4 py-2.5 rounded-none font-black text-xs uppercase hover:bg-stone-800 active:translate-y-0.5 transition-all">Gunakan</button>
+                <!-- Coupon Bar with Premium styling -->
+                <div class="bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-3 flex gap-2 items-center rounded">
+                    <input type="text" id="coupon-code" placeholder="PUNYA KODE PROMO?" class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded px-4 py-3 text-xs uppercase font-extrabold focus:outline-none focus:border-brand-500 text-slate-800 dark:text-white placeholder-slate-400">
+                    <button onclick="applyCoupon()" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded font-bold text-xs uppercase hover:opacity-90 active:scale-95 transition-all">Pakai</button>
                 </div>
-                <p id="coupon-msg" class="text-xs text-center font-black uppercase tracking-wider hidden"></p>
+                <p id="coupon-msg" class="text-[10px] text-center font-bold uppercase tracking-wider hidden"></p>
 
-                <!-- Secure Gateways Selector -->
+                <!-- Modern Interactive Payment Gateways -->
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-custom-sub">Pilih Metode Pembayaran</label>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Metode Pembayaran</label>
                     <div class="grid grid-cols-2 gap-3">
-                        <div onclick="setPayment('qris')" id="pay-qris" class="payment-box boxy-card p-3 cursor-pointer hover:bg-custom-box/50 rounded-none bg-custom-canvas flex items-center gap-2">
-                            <span class="text-lg">📱</span>
-                            <span class="font-black text-[10px] uppercase tracking-wide text-custom-main">QRIS / E-WALLET</span>
+                        <div onclick="setPayment('qris')" id="pay-qris" class="payment-box bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 cursor-pointer hover:shadow-md rounded flex flex-col items-center justify-center gap-2 transition-all duration-300">
+                            <span class="text-xl">📱</span>
+                            <span class="font-extrabold text-[10px] uppercase tracking-wider text-slate-800 dark:text-white">QRIS / E-WALLET</span>
                         </div>
-                        <div onclick="setPayment('va')" id="pay-va" class="payment-box boxy-card p-3 cursor-pointer hover:bg-custom-box/50 rounded-none bg-custom-canvas flex items-center gap-2">
-                            <span class="text-lg">🏦</span>
-                            <span class="font-black text-[10px] uppercase tracking-wide text-custom-main">VIRT. ACCOUNT</span>
+                        <div onclick="setPayment('va')" id="pay-va" class="payment-box bg-white dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 cursor-pointer hover:shadow-md rounded flex flex-col items-center justify-center gap-2 transition-all duration-300">
+                            <span class="text-xl">🏦</span>
+                            <span class="font-extrabold text-[10px] uppercase tracking-wider text-slate-800 dark:text-white">VIRTUAL ACCOUNT</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- STEP 5: SUCCESS TICKET SCREEN -->
-            <div id="step-5" class="space-y-5 hidden text-center">
-                <div class="py-3">
-                    <div class="w-12 h-12 bg-emerald-600 border-2.5 border-black text-white font-black text-lg flex items-center justify-center mx-auto mb-3 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <!-- STEP 5: SUCCESS INTERACTIVE ELECTRONIC TICKET -->
+            <div id="step-5" class="space-y-5 hidden text-center fade-enter">
+                <div class="py-2">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-extrabold text-xl flex items-center justify-center mx-auto mb-3 rounded shadow-lg shadow-emerald-500/10">
                         ✓
                     </div>
-                    <h2 class="text-2xl font-black uppercase tracking-tight text-custom-main">TIKET BERHASIL AKTIF!</h2>
-                    <p class="text-custom-sub text-xs mt-0.5">E-Ticket Anda sudah diverifikasi dan terdaftar dalam sistem lapangan kami</p>
+                    <h2 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase">RESERVASI BERHASIL</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">E-Ticket resmi Anda telah divalidasi dan terdaftar</p>
                 </div>
 
-                <!-- Digital Adventure Ticket (Clean Layout) -->
-                <div class="boxy-card rounded-none overflow-hidden text-left relative bg-custom-canvas">
-                    <div class="bg-custom-box border-b-2.5 border-dashed border-black p-5 text-custom-main">
+                <!-- Sleek Digital Pass/Ticket (Modern Styled with rounded features) -->
+                <div class="border border-slate-100 dark:border-slate-800 rounded overflow-hidden text-left relative bg-white dark:bg-slate-900 shadow-xl">
+                    <div class="bg-slate-50 dark:bg-slate-950 border-b border-dashed border-slate-200 dark:border-slate-800 p-5 text-slate-800 dark:text-white">
                         <div class="flex justify-between items-center">
-                            <span class="text-[8px] tracking-widest uppercase font-black bg-custom-canvas border border-black px-2 py-0.5">ADVENTURE PASS</span>
-                            <span class="text-xs font-black" id="ticket-id">#AP-992120</span>
+                            <span class="text-[9px] tracking-widest uppercase font-extrabold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2.5 py-1 rounded text-slate-500 dark:text-slate-400 shadow-sm">ADVENTURE PASS</span>
+                            <span class="text-xs font-black text-brand-500" id="ticket-id">#AP-992120</span>
                         </div>
-                        <h3 id="ticket-package-title" class="text-xl font-black mt-3.5 uppercase tracking-tight leading-none text-custom-main">Mud Volcano Thrill</h3>
-                        <p class="text-xs text-[var(--color-accent)] font-black uppercase tracking-wider mt-1" id="ticket-datetime">SABTU, 20 JUNI 2026 • 01:00 PM</p>
+                        <h3 id="ticket-package-title" class="text-base font-black mt-4 uppercase tracking-tight leading-none text-slate-900 dark:text-white">Mud Volcano Thrill</h3>
+                        <p class="text-[10px] text-brand-500 font-extrabold uppercase tracking-widest mt-1.5" id="ticket-datetime">SABTU, 20 JUNI 2026 • SESI 1</p>
                     </div>
 
-                    <!-- Internal Ticket Info lists -->
-                    <div class="p-5 space-y-4 bg-custom-canvas">
-                        <div class="grid grid-cols-2 gap-4 text-xs border-b border-stone-200 pb-3">
+                    <div class="p-5 space-y-4 bg-white dark:bg-slate-900/60">
+                        <div class="grid grid-cols-2 gap-4 text-xs border-b border-slate-100 dark:border-slate-800 pb-3">
                             <div>
-                                <p class="text-custom-sub uppercase tracking-wider text-[8px] font-black">Nama Pengunjung</p>
-                                <p class="font-black text-custom-main mt-0.5 uppercase" id="ticket-guest-name">Rian Hardi</p>
+                                <p class="text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[8px] font-bold">Nama Tamu</p>
+                                <p class="font-extrabold text-slate-800 dark:text-white mt-0.5 uppercase" id="ticket-guest-name">Rian Hardi</p>
                             </div>
                             <div>
-                                <p class="text-custom-sub uppercase tracking-wider text-[8px] font-black">Jumlah ATV & Sesi</p>
-                                <p class="font-black text-custom-main mt-0.5 uppercase" id="ticket-guest-qty">2 ATV / Tandem</p>
+                                <p class="text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[8px] font-bold">Unit & Gaya</p>
+                                <p class="font-extrabold text-slate-800 dark:text-white mt-0.5 uppercase" id="ticket-guest-qty">2 ATV / TANDEM</p>
                             </div>
                         </div>
 
-                        <!-- Ticket QR Code SVG Generator -->
-                        <div class="flex flex-col items-center justify-center py-1 space-y-2.5">
-                            <div class="p-2.5 bg-white rounded-none border border-black">
-                                <svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 5h30v30H5V5zm6 6v18h18V11H11z" fill="#000000"/>
-                                    <path d="M16 16h8v8h-8v-8z" fill="#ea580c"/>
-                                    <path d="M65 5h30v30H65V5zm6 6v18h18V11H71z" fill="#000000"/>
-                                    <path d="M76 16h8v8h-8v-8z" fill="#ea580c"/>
-                                    <path d="M5 65h30v30H5V65zm6 6v18h18V71H11z" fill="#000000"/>
-                                    <path d="M16 76h8v8h-8v-8z" fill="#ea580c"/>
-                                    <path d="M45 10h10v10H45V10zm5 25h10v10H50V35zm10 15h15v10H60V50zm15-15h10v10H75V35zM45 60h10v20H45V60zm20 15h10v20H65V75zm15-10h15v10H80V65zm-15-5H60v10h5V60zm10 5h5v5h-5v-5z" fill="#000000"/>
-                                    <path d="M52 52h8v8h-8v-8z" fill="#16a34a"/>
+                        <!-- Technical QR Ticket code -->
+                        <div class="flex flex-col items-center justify-center py-2 space-y-3">
+                            <div class="p-3 bg-white rounded border border-slate-100 shadow-inner">
+                                <svg class="w-28 h-28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 5h30v30H5V5zm6 6v18h18V11H11z" fill="#1e293b"/>
+                                    <path d="M16 16h8v8h-8v-8z" fill="#f97316"/>
+                                    <path d="M65 5h30v30H65V5zm6 6v18h18V11H71z" fill="#1e293b"/>
+                                    <path d="M76 16h8v8h-8v-8z" fill="#f97316"/>
+                                    <path d="M5 65h30v30H5V65zm6 6v18h18V71H11z" fill="#1e293b"/>
+                                    <path d="M16 76h8v8h-8v-8z" fill="#f97316"/>
+                                    <path d="M45 10h10v10H45V10zm5 25h10v10H50V35zm10 15h15v10H60V50zm15-15h10v10H75V35zM45 60h10v20H45V60zm20 15h10v20H65V75zm15-10h15v10H80V65zm-15-5H60v10h5V60zm10 5h5v5h-5v-5z" fill="#1e293b"/>
+                                    <path d="M52 52h8v8h-8v-8z" fill="#10b981"/>
                                 </svg>
                             </div>
-                            <span class="text-[8px] text-custom-sub uppercase tracking-wider font-black">Pindai kode QR pada saat kedatangan</span>
+                            <span class="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-extrabold">Pindai QR ini di pos masuk kedatangan</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- After completion actions -->
+                <!-- Completion Interactive Actions -->
                 <div class="flex gap-2">
-                    <button onclick="goToStep(1)" class="flex-1 bg-custom-canvas border-2 border-black text-custom-main py-3.5 rounded-none font-black text-xs uppercase hover:bg-custom-box/55 active:translate-y-0.5">Kembali Ke Awal</button>
-                    <button onclick="window.print()" class="flex-1 bg-black text-white border-2 border-black py-3.5 rounded-none font-black text-xs uppercase hover:bg-stone-800 active:translate-y-0.5">Download PDF</button>
+                    <button onclick="goToStep(1)" class="flex-1 bg-slate-50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-white py-3.5 rounded font-bold text-xs uppercase active:scale-95 transition-all border border-slate-100 dark:border-slate-800">Kembali</button>
+                    <button onclick="window.print()" class="flex-1 bg-brand-500 hover:bg-brand-600 text-white py-3.5 rounded font-bold text-xs uppercase active:scale-95 transition-all shadow-lg shadow-brand-500/10">Simpan PDF</button>
                 </div>
             </div>
 
             <!-- SECRET OWNER'S COMMAND CENTER PANEL -->
-            <div id="admin-panel" class="space-y-5 hidden pb-12">
-                <div class="flex justify-between items-center border-b-2 border-black pb-3">
+            <div id="admin-panel" class="space-y-4 hidden pb-12 fade-enter">
+                <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
                     <div>
-                        <span class="text-[8px] bg-black text-white px-2.5 py-0.5 font-black uppercase border border-black rounded-none">Control Panel</span>
-                        <h2 class="text-xl font-black mt-1 uppercase tracking-tight text-custom-main">ADVENTURE HUB</h2>
+                        <span class="text-[8px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-2.5 py-1 font-bold uppercase rounded">Operator Hub</span>
+                        <h2 class="text-base font-extrabold mt-1 text-slate-900 dark:text-white uppercase tracking-tight">Adventure Hub</h2>
                     </div>
-                    <button onclick="toggleAdminPanel()" class="bg-black text-white px-3 py-1.5 text-xs font-black border border-black rounded-none">Tutup</button>
+                    <button onclick="toggleAdminPanel()" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-3 py-1.5 text-xs font-bold rounded">Tutup</button>
                 </div>
 
-                <!-- Live Performance Metrics -->
-                <div class="grid grid-cols-2 gap-2.5">
-                    <div class="boxy-card p-4 bg-custom-canvas rounded-none">
-                        <p class="text-custom-sub text-[8px] font-black uppercase">Pendapatan Hari Ini</p>
-                        <h3 class="text-base font-black mt-0.5 text-custom-main">Rp 4.550.000</h3>
-                        <span class="text-[8px] text-emerald-600 font-black uppercase">▲ +12% VS KEMARIN</span>
+                <!-- Live Metrics -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="border border-slate-100 dark:border-slate-800 p-3.5 bg-white dark:bg-slate-800/20 rounded">
+                        <p class="text-slate-400 dark:text-slate-500 text-[9px] font-bold uppercase">Pendapatan Hari Ini</p>
+                        <h3 class="text-sm font-black mt-0.5 text-slate-800 dark:text-white">Rp 4.550.000</h3>
+                        <span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold">▲ +12% vs Kemarin</span>
                     </div>
-                    <div class="boxy-card p-4 bg-custom-canvas rounded-none">
-                        <p class="text-custom-sub text-[8px] font-black uppercase">Booking Aktif</p>
-                        <h3 class="text-base font-black mt-0.5 text-custom-main">14 Transaksi</h3>
-                        <span class="text-[8px] text-custom-sub font-black uppercase">TOTAL 28 PESERTA</span>
+                    <div class="border border-slate-100 dark:border-slate-800 p-3.5 bg-white dark:bg-slate-800/20 rounded">
+                        <p class="text-slate-400 dark:text-slate-500 text-[9px] font-bold uppercase">Booking Aktif</p>
+                        <h3 class="text-sm font-black mt-0.5 text-slate-800 dark:text-white">14 Transaksi</h3>
+                        <span class="text-[9px] text-slate-400 dark:text-slate-500 font-bold">Total 28 Peserta</span>
                     </div>
                 </div>
 
-                <!-- Interactive Pricing override variables -->
-                <div class="boxy-card p-4 space-y-3 rounded-none bg-custom-canvas">
-                    <h3 class="font-black text-[10px] uppercase border-b border-black pb-1.5 tracking-wider text-custom-main">PENGATURAN HARGA CEPAT (LIVE)</h3>
-                    <div class="space-y-2.5 text-xs">
+                <!-- Pricing Overrides -->
+                <div class="border border-slate-100 dark:border-slate-800 p-4 space-y-3 rounded bg-white dark:bg-slate-800/20">
+                    <h3 class="font-extrabold text-[10px] uppercase border-b border-slate-100 dark:border-slate-800 pb-2 text-slate-900 dark:text-white">Pengaturan Harga Dasar</h3>
+                    <div class="space-y-3 text-xs">
                         <div>
-                            <label class="text-custom-sub font-black block mb-0.5 uppercase text-[9px]">Base Price Mud Volcano Thrill</label>
+                            <label class="text-slate-400 dark:text-slate-500 font-bold block mb-1 uppercase text-[8px]">Mud Volcano Thrill</label>
                             <div class="flex items-center gap-1.5">
-                                <span class="text-custom-sub font-bold">Rp</span>
-                                <input type="number" id="adm-base-1" value="350000" onchange="updateAdminPrices()" class="input-custom rounded-none px-2 py-1.5 w-full font-black text-xs">
+                                <span class="text-slate-400 font-bold">Rp</span>
+                                <input type="number" id="adm-base-1" value="350000" onchange="updateAdminPrices()" class="bg-slate-50 dark:bg-slate-950 rounded px-2.5 py-1.5 w-full font-bold text-xs border border-slate-100 dark:border-slate-900 text-slate-800 dark:text-white focus:outline-none">
                             </div>
                         </div>
                         <div>
-                            <label class="text-custom-sub font-black block mb-0.5 uppercase text-[9px]">Base Price Waterfall Descent</label>
+                            <label class="text-slate-400 dark:text-slate-500 font-bold block mb-1 uppercase text-[8px]">Waterfall Cave Descent</label>
                             <div class="flex items-center gap-1.5">
-                                <span class="text-custom-sub font-bold">Rp</span>
-                                <input type="number" id="adm-base-2" value="450000" onchange="updateAdminPrices()" class="input-custom rounded-none px-2 py-1.5 w-full font-black text-xs">
+                                <span class="text-slate-400 font-bold">Rp</span>
+                                <input type="number" id="adm-base-2" value="450000" onchange="updateAdminPrices()" class="bg-slate-50 dark:bg-slate-950 rounded px-2.5 py-1.5 w-full font-bold text-xs border border-slate-100 dark:border-slate-900 text-slate-800 dark:text-white focus:outline-none">
                             </div>
                         </div>
-                        <p class="text-[8px] text-[var(--color-accent)] italic font-bold">*Mengubah nilai di atas akan langsung memperbarui harga katalog pelanggan secara real-time.</p>
                     </div>
                 </div>
 
-                <!-- Live Camera QR Code simulation scanner -->
-                <div class="boxy-card p-4 space-y-3 text-center rounded-none bg-custom-canvas">
-                    <h3 class="font-black text-[10px] text-left uppercase tracking-wider text-custom-main">Validator Tiket Lapangan</h3>
-                    <div class="h-36 bg-black rounded-none border-2 border-dashed border-white flex flex-col items-center justify-center p-3 relative overflow-hidden">
-                        <div class="absolute inset-x-0 top-1/2 h-0.5 bg-[var(--color-accent)] animate-bounce"></div>
-                        <span class="text-xl mb-1">📷</span>
-                        <p class="text-[10px] text-white font-black uppercase tracking-wide">Arahkan kamera ke tiket pelanggan</p>
-                        <p class="text-[8px] text-stone-400">Pindai kode QR digital pelanggan</p>
+                <!-- Simulation Check-in QR scanning -->
+                <div class="border border-slate-100 dark:border-slate-800 p-4 space-y-3 text-center rounded bg-white dark:bg-slate-800/20">
+                    <h3 class="font-extrabold text-[10px] text-left uppercase text-slate-900 dark:text-white">Validator Tiket Lapangan</h3>
+                    <div class="h-28 bg-slate-950 rounded border border-slate-800 flex flex-col items-center justify-center p-3 relative overflow-hidden shadow-inner">
+                        <div class="absolute inset-x-0 top-1/2 h-0.5 bg-brand-500 animate-bounce"></div>
+                        <span class="text-lg">📷</span>
+                        <p class="text-[9px] text-white font-bold uppercase tracking-widest">Kamera Deteksi Aktif</p>
                     </div>
-                    <button onclick="simulateCheckIn()" class="w-full bg-[var(--color-accent)] text-white border border-black font-black text-xs py-2.5 rounded-none active:translate-y-0.5 transition-all uppercase tracking-wider">Simulasi Scan Tiket</button>
-                    <p id="scan-msg" class="text-xs text-emerald-600 font-black uppercase tracking-wider hidden"></p>
+                    <button onclick="simulateCheckIn()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs py-2.5 rounded transition-all shadow-md shadow-brand-500/15">Simulasi Scan Tiket</button>
+                    <p id="scan-msg" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider hidden"></p>
                 </div>
             </div>
         </main>
 
-        <!-- Fixed Sticky Footer layout: Real-time price tracking and progress buttons -->
-        <footer id="price-footer" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-custom-canvas border-t-[3px] border-black flex justify-between items-center z-40 transition-all duration-150 shadow-[0_-4px_0_0_rgba(17,24,39,0.04)]">
+        <!-- Fixed Sticky Footer: Dynamic price render and CTA actions -->
+        <footer id="price-footer" class="fixed bottom-0 md:absolute left-0 right-0 max-w-md mx-auto p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 flex justify-between items-center z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] transition-all duration-300 md:rounded-b-[2.5rem]">
             <div>
-                <p class="text-custom-sub text-[8px] font-black uppercase tracking-widest">Total Pembayaran</p>
+                <p class="text-slate-400 dark:text-slate-500 text-[9px] font-bold uppercase tracking-widest">Total Pembayaran</p>
                 <div class="flex items-baseline gap-1">
-                    <p id="total-price-display" class="text-xl font-black text-[var(--color-accent)] tracking-tight">Rp 0</p>
-                    <span id="footer-disc-tag" class="text-[7px] text-white bg-black px-1 border border-white font-black uppercase tracking-wider hidden">PROMO</span>
+                    <p id="total-price-display" class="text-lg font-black text-brand-500 tracking-tight">Rp 0</p>
+                    <span id="footer-disc-tag" class="text-[8px] text-white bg-emerald-600 px-1.5 py-0.5 font-bold uppercase rounded hidden">PROMO</span>
                 </div>
-                <p id="footer-summary-text" class="text-[8px] text-custom-sub mt-0.5 font-bold uppercase tracking-wider">PILIH PAKET PETUALANGAN</p>
+                <p id="footer-summary-text" class="text-[8px] text-slate-400 dark:text-slate-500 mt-0.5 font-bold uppercase tracking-widest">Pilih Petualangan</p>
             </div>
             
-            <!-- Contextual Next Actions navigation trigger -->
-            <button id="cta-button" onclick="handleNavigation()" class="bg-[var(--color-accent)] px-5 py-3.5 rounded-none font-black text-xs text-white uppercase tracking-widest active:translate-x-0.5 active:translate-y-0.5 hover:bg-stone-900 transition-all flex items-center gap-1.5 border-2 border-black boxy-btn-push shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                <span id="cta-text">PILIH AKTIVITAS</span>
-                <span>→</span>
+            <!-- Navigation Action Button -->
+            <button id="cta-button" onclick="handleNavigation()" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3.5 rounded font-bold text-[11px] uppercase tracking-wider active:scale-95 transition-all flex items-center gap-1.5 shadow-lg shadow-brand-500/25">
+                <span id="cta-text">Pilih Aktivitas</span>
+                <span class="text-xs">→</span>
             </button>
         </footer>
 
     </div>
 
-    <!-- Script Engine Javascript -->
+    <!-- Core Application Javascript engine -->
     <script>
-        // Default System States variables
+        // Core states
         let isDarkMode = false;
         let currentStep = 1;
         
@@ -629,7 +537,7 @@
         let selectedPackageName = "";
         let packageBasePrice = 0;
         
-        let rideMode = 'single'; // single vs tandem ride options
+        let rideMode = 'single'; 
         let qty = 1;
         
         let addons = {
@@ -643,76 +551,83 @@
             lunch: 75000
         };
 
-        let selectedDay = "20"; // defaults Saturday
-        let selectedDayName = "Sabtu";
-        let isWeekend = true; // Surcharges dynamically applicable
+        let selectedDateValue = "";
+        let isWeekend = false; 
         let selectedTime = "Sesi 1";
         
         let discountApplied = 0;
         let activeCoupon = "";
         let paymentMethod = "";
 
-        // Admin customizable prices catalog override variables
+        // Admin customizable pricing rules
         let adminOverridePrices = {
             1: 350000,
             2: 450000
         };
 
-        // Theme Toggle controller
-        function toggleThemeMode() {
+        // Theme controllers
+        function toggleTheme() {
             const body = document.body;
             const themeIcon = document.getElementById('theme-icon');
             
-            if (body.classList.contains('theme-light')) {
-                body.classList.remove('theme-light');
-                body.classList.add('theme-dark');
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                document.documentElement.classList.add('dark');
                 themeIcon.innerText = "☀️";
                 isDarkMode = true;
             } else {
-                body.classList.remove('theme-dark');
-                body.classList.add('theme-light');
+                body.classList.remove('dark');
+                body.classList.add('light');
+                document.documentElement.classList.remove('dark');
                 themeIcon.innerText = "🌙";
                 isDarkMode = false;
             }
         }
 
-        // Initialize core application systems
+        // Initialize application configurations on load
         window.onload = function() {
+            // Force minimum date range to today's date
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('booking-date');
+            dateInput.min = today;
+            
             goToStep(1);
             updatePrices();
         };
 
-        // Flow navigation controller
+        // Step Router
         function goToStep(step) {
-            // Validation requirements per step
+            // Step validatons
             if (step > 1 && !selectedPackageId) {
-                showVisualMessage("SILAHKAN PILIH SALAH SATU PAKET TERLEBIH DAHULU!");
+                showVisualMessage("SILAKAN PILIH SALAH SATU PAKET TERLEBIH DAHULU!");
                 return;
             }
             if (step > 2 && rideMode === "") {
                 showVisualMessage("PILIH GAYA BERKENDARA!");
                 return;
             }
-            if (step > 3 && (!selectedDay || !selectedTime)) {
-                showVisualMessage("SILAHKAN TENTUKAN TANGGAL & SESI!");
+            if (step > 3 && (!selectedDateValue || !selectedTime)) {
+                showVisualMessage("SILAKAN TENTUKAN TANGGAL & SESI JALUR!");
                 return;
             }
 
-            // Hide inactive templates
+            // Hide inactive panels
             for (let i = 1; i <= 5; i++) {
                 document.getElementById('step-' + i).classList.add('hidden');
                 let pill = document.getElementById('nav-step-' + i);
                 if (pill) {
                     pill.classList.remove('text-white');
-                    pill.classList.add('text-custom-sub');
+                    pill.classList.remove('bg-brand-500');
+                    pill.classList.add('text-slate-400', 'dark:text-slate-500');
                 }
             }
 
-            // Reveal targeted step views
+            // Reveal targeted active panel
             document.getElementById('step-' + step).classList.remove('hidden');
             currentStep = step;
 
-            // Update Progress Tracking indicators
+            // Manage progress indicator layouts
             let indicator = document.getElementById('step-indicator');
             let trackerContainer = document.getElementById('step-tracker-container');
             
@@ -725,31 +640,31 @@
                 
                 let activePill = document.getElementById('nav-step-' + step);
                 if (activePill) {
-                    activePill.classList.remove('text-custom-sub');
+                    activePill.classList.remove('text-slate-400', 'dark:text-slate-500');
                     activePill.classList.add('text-white');
                 }
                 
-                // Animating indicator positions horizontally
+                // Adjust horizontal indicators dynamically
                 let percentage = (step - 1) * 25;
-                indicator.style.left = `calc(${percentage}% + 4px)`;
+                indicator.style.left = `calc(${percentage}% + 6px)`;
             }
 
-            // Update footer contextual controls labels
+            // Adjust CTA labels contextual text
             let ctaText = document.getElementById('cta-text');
             if (step === 1) {
-                ctaText.innerText = "PILIH AKTIVITAS";
+                ctaText.innerText = "Pilih Aktivitas";
             } else if (step === 2) {
-                ctaText.innerText = "LANJUT JADWAL";
+                ctaText.innerText = "Lanjut Jadwal";
             } else if (step === 3) {
-                ctaText.innerText = "LANJUT DATA DIRI";
+                ctaText.innerText = "Lanjut Detail";
             } else if (step === 4) {
-                ctaText.innerText = "KONFIRMASI BAYAR";
+                ctaText.innerText = "Bayar Sekarang";
             }
 
             updatePrices();
         }
 
-        // Contextual trigger routing
+        // Handle navigation clicks dynamically
         function handleNavigation() {
             if (currentStep < 4) {
                 goToStep(currentStep + 1);
@@ -758,7 +673,7 @@
             }
         }
 
-        // Dynamic activity selections
+        // Package Selector
         function selectPackage(id, name, basePrice, imgUrl) {
             selectedPackageId = id;
             selectedPackageName = name;
@@ -766,9 +681,12 @@
             packageBasePrice = adminOverridePrices[id] || basePrice;
 
             document.querySelectorAll('.activity-card').forEach(card => {
-                card.classList.remove('boxy-card-active');
+                card.classList.remove('ring-4', 'ring-brand-500', 'border-transparent');
+                card.classList.add('border-slate-100', 'dark:border-slate-800');
             });
-            document.getElementById('pkg-' + id).classList.add('boxy-card-active');
+            let selectedCard = document.getElementById('pkg-' + id);
+            selectedCard.classList.remove('border-slate-100', 'dark:border-slate-800');
+            selectedCard.classList.add('ring-4', 'ring-brand-500', 'border-transparent');
 
             document.getElementById('selected-activity-img').src = imgUrl;
             document.getElementById('selected-activity-title').innerText = name;
@@ -777,61 +695,80 @@
             goToStep(2);
         }
 
-        // Custom ride setup
+        // Ride Customizer setter
         function setRideMode(mode) {
             rideMode = mode;
-            document.getElementById('mode-single').classList.remove('boxy-card-active');
-            document.getElementById('mode-tandem').classList.remove('boxy-card-active');
-            document.getElementById('mode-' + mode).classList.add('boxy-card-active');
+            
+            // Set styles
+            document.getElementById('mode-single').classList.remove('ring-4', 'ring-brand-500', 'border-transparent');
+            document.getElementById('mode-tandem').classList.remove('ring-4', 'ring-brand-500', 'border-transparent');
+            
+            document.getElementById('mode-' + mode).classList.add('ring-4', 'ring-brand-500', 'border-transparent');
             updatePrices();
         }
 
-        // Item quantities manager
+        // Counter handler
         function changeQty(amount) {
             qty = Math.max(1, qty + amount);
             document.getElementById('qty-counter').innerText = qty;
             updatePrices();
         }
 
-        // Supplementary checkbox accessory selectors
+        // Toggle selected addons
         function toggleAddon(addonKey, price) {
             addons[addonKey] = !addons[addonKey];
             document.getElementById('addon-' + addonKey + '-chk').checked = addons[addonKey];
             
             let row = document.getElementById('addon-' + addonKey + '-chk').closest('.addon-row');
             if (addons[addonKey]) {
-                row.classList.add('boxy-card-active');
+                row.classList.add('ring-2', 'ring-brand-500', 'border-transparent');
             } else {
-                row.classList.remove('boxy-card-active');
+                row.classList.remove('ring-2', 'ring-brand-500', 'border-transparent');
             }
             updatePrices();
         }
 
-        // Choose Booking Date from calendar slider
-        function selectDate(day, dayName, isWe) {
-            selectedDay = day;
-            selectedDayName = dayName;
-            isWeekend = isWe;
+        // Handle standard Date Picker selects
+        function handleDateSelect(val) {
+            if (!val) {
+                selectedDateValue = "";
+                isWeekend = false;
+                document.getElementById('date-helper-msg').classList.add('hidden');
+                updatePrices();
+                return;
+            }
 
-            document.querySelectorAll('.date-box').forEach(box => {
-                box.classList.remove('boxy-card-active');
-            });
-            document.getElementById('date-' + day).classList.add('boxy-card-active');
+            selectedDateValue = val;
+            const dateObj = new Date(val);
+            const dayOfWeek = dateObj.getDay(); 
+
+            const helperMsg = document.getElementById('date-helper-msg');
             
+            // If day is Sat (6) or Sun (0), apply dynamic weekend surcharge
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                isWeekend = true;
+                helperMsg.innerText = "⚡ HARI LIBUR / WEEKEND (+10% SURCHARGE)";
+                helperMsg.className = "text-[9px] font-bold text-brand-500 uppercase tracking-wide block mt-2.5 px-2";
+            } else {
+                isWeekend = false;
+                helperMsg.innerText = "✓ HARI KERJA / WEEKDAY (HARGA STANDAR)";
+                helperMsg.className = "text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide block mt-2.5 px-2";
+            }
+
             updatePrices();
         }
 
-        // Sesi selections
+        // Session pickers
         function selectTimeSlot(slotKey, timeString) {
             selectedTime = timeString;
             document.querySelectorAll('.time-slot').forEach(slot => {
-                slot.classList.remove('boxy-card-active');
+                slot.classList.remove('ring-4', 'ring-brand-500', 'border-transparent');
             });
-            document.getElementById('slot-' + slotKey).classList.add('boxy-card-active');
+            document.getElementById('slot-' + slotKey).classList.add('ring-4', 'ring-brand-500', 'border-transparent');
             updatePrices();
         }
 
-        // Marketing Coupon calculations code
+        // Promo code applications
         function applyCoupon() {
             let code = document.getElementById('coupon-code').value.trim().toUpperCase();
             let msg = document.getElementById('coupon-msg');
@@ -839,8 +776,8 @@
             if (code === "MUD2026") {
                 discountApplied = 50000;
                 activeCoupon = code;
-                msg.innerText = "🎉 KODE PROMO 'MUD2026' AKTIF! BERHASIL DI-POTONG RP 50.000.";
-                msg.className = "text-xs text-center font-black uppercase text-emerald-600 block mt-2";
+                msg.innerText = "🎉 PROMO 'MUD2026' AKTIF! POTONGAN RP 50.000 DIGUNAKAN.";
+                msg.className = "text-[10px] text-center font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mt-2";
                 document.getElementById('footer-disc-tag').classList.remove('hidden');
             } else if (code === "") {
                 msg.classList.add('hidden');
@@ -848,26 +785,26 @@
                 discountApplied = 0;
                 activeCoupon = "";
                 msg.innerText = "❌ KODE PROMO TIDAK VALID ATAU KADALUARSA.";
-                msg.className = "text-xs text-center font-black uppercase text-rose-600 block mt-2";
+                msg.className = "text-[10px] text-center font-bold uppercase tracking-wider text-rose-500 block mt-2";
                 document.getElementById('footer-disc-tag').classList.add('hidden');
             }
             updatePrices();
         }
 
-        // Payment selections routing
+        // Payment selections
         function setPayment(method) {
             paymentMethod = method;
             document.querySelectorAll('.payment-box').forEach(box => {
-                box.classList.remove('boxy-card-active');
+                box.classList.remove('ring-4', 'ring-brand-500', 'border-transparent');
             });
-            document.getElementById('pay-' + method).classList.add('boxy-card-active');
+            document.getElementById('pay-' + method).classList.add('ring-4', 'ring-brand-500', 'border-transparent');
         }
 
-        // Master cost engine computing all calculations rules
+        // Price calculator engine
         function updatePrices() {
             if (!selectedPackageId) {
                 document.getElementById('total-price-display').innerText = "Rp 0";
-                document.getElementById('footer-summary-text').innerText = "PILIH PAKET PETUALANGAN";
+                document.getElementById('footer-summary-text').innerText = "PILIH PETUALANGAN";
                 return;
             }
 
@@ -886,32 +823,39 @@
             }
 
             if (isWeekend) {
-                total = total * 1.1; // 10% Weekend surcharge multiplier
+                total = total * 1.1; // +10% weekend surcharge multiplier
             }
 
             total = Math.max(0, total - discountApplied);
 
             document.getElementById('total-price-display').innerText = formatRupiah(total);
             
-            let summaryText = `${qty} ATV • ${rideMode.toUpperCase()} • ${selectedDay} JUNI (${selectedTime.toUpperCase()})`;
+            // Format descriptive summary in pricing footer
+            let formattedDate = "JADWAL BELUM DIPILIH";
+            if (selectedDateValue) {
+                const options = { day: 'numeric', month: 'short' };
+                formattedDate = new Date(selectedDateValue).toLocaleDateString('id-ID', options);
+            }
+
+            let summaryText = `${qty} ATV • ${rideMode.toUpperCase()} • ${formattedDate} (${selectedTime.toUpperCase()})`;
             if (isWeekend) {
-                summaryText += " (+10% WEEKEND)";
+                summaryText += " (+10%)";
             }
             document.getElementById('footer-summary-text').innerText = summaryText;
         }
 
-        // Checkout processing simulations
+        // Secure checkout submission handler
         function processCheckout() {
             let name = document.getElementById('cust-name').value.trim();
             let phone = document.getElementById('cust-phone').value.trim();
             let email = document.getElementById('cust-email').value.trim();
 
             if (!name || !phone || !email) {
-                showVisualMessage("SILAHKAN LENGKAPI NAMA, WHATSAPP & EMAIL TERLEBIH DAHULU!");
+                showVisualMessage("SILAKAN LENGKAPI NAMA, WHATSAPP, DAN EMAIL!");
                 return;
             }
             if (!paymentMethod) {
-                showVisualMessage("SILAHKAN PILIH METODE PEMBAYARAN!");
+                showVisualMessage("SILAKAN PILIH METODE PEMBAYARAN!");
                 return;
             }
 
@@ -919,10 +863,16 @@
             document.getElementById('cta-button').disabled = true;
 
             setTimeout(() => {
-                // Populate e-ticket view
+                // Populate interactive e-ticket layouts on checkout success
                 document.getElementById('ticket-guest-name').innerText = name;
                 document.getElementById('ticket-package-title').innerText = selectedPackageName;
-                document.getElementById('ticket-datetime').innerText = `JUNI ${selectedDay}, 2026 • ${selectedTime.toUpperCase()}`;
+                
+                let dateDisplay = "HARI H";
+                if (selectedDateValue) {
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    dateDisplay = new Date(selectedDateValue).toLocaleDateString('id-ID', options);
+                }
+                document.getElementById('ticket-datetime').innerText = `${dateDisplay.toUpperCase()} • ${selectedTime.toUpperCase()}`;
                 document.getElementById('ticket-guest-qty').innerText = `${qty} ATV (${rideMode.toUpperCase()})`;
                 document.getElementById('ticket-id').innerText = "#AP-" + Math.floor(100000 + Math.random() * 900000);
 
@@ -931,7 +881,7 @@
             }, 1000);
         }
 
-        // Toggle admin control panel views
+        // Show Admin management dashboard panel
         function toggleAdminPanel() {
             let adminSection = document.getElementById('admin-panel');
             let isHidden = adminSection.classList.contains('hidden');
@@ -949,7 +899,7 @@
             }
         }
 
-        // Live prices catalogs adjusters
+        // Live admin base prices updater overrides
         function updateAdminPrices() {
             let price1 = parseFloat(document.getElementById('adm-base-1').value);
             let price2 = parseFloat(document.getElementById('adm-base-2').value);
@@ -960,22 +910,22 @@
             updatePrices();
         }
 
-        // Checkin simulation validators
+        // Simulated QR code scanner logic
         function simulateCheckIn() {
             let scanMsg = document.getElementById('scan-msg');
             scanMsg.classList.remove('hidden');
             scanMsg.innerText = "⏳ MEMPROSES VALIDASI...";
             
             setTimeout(() => {
-                scanMsg.innerHTML = "✅ TIKET VALID!<br>STATUS RESERVASI DIUBAH MENJADI: TERPAKAI.";
-                scanMsg.className = "text-xs text-center font-black uppercase text-emerald-600 block mt-2";
+                scanMsg.innerHTML = "✅ TIKET VALID!<br>STATUS BOOKING BERHASIL DIUBAH MENJADI: TERPAKAI.";
+                scanMsg.className = "text-xs text-center font-bold uppercase text-emerald-600 dark:text-emerald-400 block mt-2";
             }, 800);
         }
 
-        // Toast messages rendering helpers
+        // Helper visual alert toaster
         function showVisualMessage(text) {
             let toast = document.createElement('div');
-            toast.className = "fixed top-6 left-1/2 transform -translate-x-1/2 bg-black border-2 border-white text-white px-5 py-3 rounded-none font-black text-xs uppercase tracking-wider z-50 text-center shadow-lg";
+            toast.className = "fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded font-bold text-[10px] uppercase tracking-wider z-50 text-center shadow-lg transition-all duration-300";
             toast.innerText = text;
             document.body.appendChild(toast);
             
@@ -984,7 +934,7 @@
             }, 2500);
         }
 
-        // Formatting utilities
+        // Currency formatting utility
         function formatRupiah(num) {
             return "Rp " + num.toLocaleString('id-ID');
         }
