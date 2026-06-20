@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bali Unified Booking Engine Prototype</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for beautiful icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Playfair Display for premium Bali look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght=0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        bali: {
+                            sand: '#F7F4F0',
+                            clay: '#D4A373',
+                            emerald: '#1C3F3A',
+                            dark: '#11221F',
+                            accent: '#E07A5F',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for visual refinement */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F7F4F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4A373;
+            border-radius: 99px;
+        }
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        /* Mobile layout styling */
+        .phone-viewport {
+            height: 820px;
+            max-height: 92vh;
+        }
+        /* Image fade-in animation */
+        .preview-img {
+            transition: all 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-[#181E1C] text-stone-800 font-sans min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- Top premium navigation bar -->
+    <header class="bg-bali-dark text-white px-6 py-4 border-b border-emerald-900/40 flex justify-between items-center shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-bali-clay rounded-full flex items-center justify-center text-bali-dark font-serif font-bold text-xl">S</div>
+            <div>
+                <h1 class="font-serif text-lg tracking-wide">SANTI BALI</h1>
+                <p class="text-xs text-stone-400 font-mono">Unified Multi-Vertical Booking Engine Prototype</p>
+            </div>
+        </div>
+        <div class="hidden md:flex items-center space-x-6 text-sm text-stone-300">
+            <span><i class="fa-solid fa-circle text-emerald-400 text-[10px] mr-2 animate-pulse"></i>Unified Schema Active</span>
+            <span class="bg-bali-emerald px-3 py-1.5 rounded-full border border-emerald-800 text-xs text-bali-clay">UX/UI Dynamic Itinerary Demo</span>
+        </div>
+    </header>
+
+    <!-- Main Workspace Dashboard -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+        <!-- Sisi Kanan: Simulator Mobile Phone -->
+        <div class="lg:col-span-7 flex justify-center items-center">
+            
+            <!-- Phone Outer Bezel Simulator -->
+            <div class="relative w-full max-w-[420px] bg-stone-950 rounded-[48px] p-3.5 shadow-2xl border-4 border-stone-800 flex flex-col justify-between phone-viewport overflow-hidden">
+                
+                <!-- Camera Notch / Dynamic Island Simulator -->
+                <div class="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-full z-50 flex items-center justify-between px-3">
+                    <div class="w-1.5 h-1.5 bg-zinc-800 rounded-full"></div>
+                    <div class="w-12 h-1 bg-zinc-950 rounded-full"></div>
+                    <div class="w-2.5 h-2.5 bg-blue-950 rounded-full border border-zinc-900 flex items-center justify-center">
+                        <div class="w-1 h-1 bg-blue-500 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Phone Internal Screen Container -->
+                <div class="w-full h-full bg-bali-sand rounded-[38px] overflow-hidden flex flex-col justify-between relative pt-8 pb-4">
+                    
+                    <!-- Dynamic Alert Toast inside the phone -->
+                    <div id="toast-banner" class="absolute top-10 left-1/2 -translate-x-1/2 w-[92%] bg-emerald-900 text-white py-2.5 px-4 rounded-2xl shadow-xl flex items-center space-x-2 text-xs font-medium border border-emerald-700/50 transform -translate-y-28 transition-all duration-300 z-50">
+                        <i class="fa-solid fa-circle-check text-bali-clay text-lg"></i>
+                        <span id="toast-message" class="flex-1">Pilihan berhasil ditambahkan!</span>
+                    </div>
+
+                    <!-- Inner Scrollable Content Area -->
+                    <div class="flex-1 overflow-y-auto pb-24 px-4 space-y-4" id="phone-scroll-container">
+                        
+                        <!-- Mini Header Brand inside phone -->
+                        <div class="flex justify-between items-center mt-2">
+                            <div>
+                                <span class="text-[10px] text-stone-500 font-bold uppercase tracking-widest">Akomodasi Bali Anda</span>
+                                <h3 class="font-serif text-xl text-bali-emerald font-bold">Rancang Liburan Bali</h3>
+                            </div>
+                            <div class="relative">
+                                <button onclick="scrollToCart()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-bali-emerald border border-stone-200">
+                                    <i class="fa-solid fa-suitcase-rolling text-md"></i>
+                                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-bali-accent text-white font-bold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-bali-sand hidden">0</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Service Selector (Tabs Pill) - Scrollable on very small screens -->
+                        <div class="bg-white p-1.5 rounded-2xl shadow-sm flex overflow-x-auto justify-between items-center border border-stone-200/60 shrink-0 gap-1">
+                            <button onclick="switchTab('packages')" id="tab-packages" class="flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-all duration-200 bg-bali-emerald text-white">
+                                <i class="fa-solid fa-gift text-sm"></i>
+                                <span>Paket</span>
+                            </button>
+                            <button onclick="switchTab('room')" id="tab-room" class="flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 text-stone-400 transition-all duration-200 hover:text-stone-700">
+                                <i class="fa-solid fa-bed text-sm"></i>
+                                <span>Kamar</span>
+                            </button>
+                            <button onclick="switchTab('car')" id="tab-car" class="flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 text-stone-400 transition-all duration-200 hover:text-stone-700">
+                                <i class="fa-solid fa-car text-sm"></i>
+                                <span>Armada</span>
+                            </button>
+                            <button onclick="switchTab('activity')" id="tab-activity" class="flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 text-stone-400 transition-all duration-200 hover:text-stone-700">
+                                <i class="fa-solid fa-mountain text-sm"></i>
+                                <span>Tur</span>
+                            </button>
+                            <button onclick="switchTab('spa')" id="tab-spa" class="flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 text-stone-400 transition-all duration-200 hover:text-stone-700">
+                                <i class="fa-solid fa-spa text-sm"></i>
+                                <span>Spa</span>
+                            </button>
+                        </div>
+
+                        <!-- Dynamic Interactive Forms & Offerings -->
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-200/60" id="form-container">
+                            
+                            <!-- FORM 0: PRE-MADE PACKAGES (Active by default now) -->
+                            <div id="form-packages" class="space-y-4">
+                                <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+                                    <h4 class="text-sm font-bold text-bali-emerald"><i class="fa-solid fa-gift mr-1 text-bali-clay"></i> Paket Bundling Hemat</h4>
+                                    <span class="text-[10px] bg-orange-100 text-orange-800 font-bold px-2 py-0.5 rounded">All-Inclusive</span>
+                                </div>
+                                <p class="text-[11px] text-stone-500 leading-relaxed">
+                                    Pilih satu paket terkurasi untuk langsung mengisi seluruh komponen liburan Anda secara instan dan hemat.
+                                </p>
+
+                                <!-- Package Cards Inside Phone -->
+                                <div class="space-y-3">
+                                    
+                                    <!-- Honeymoon Package Card -->
+                                    <div class="border border-stone-150 rounded-2xl overflow-hidden bg-stone-50">
+                                        <div class="relative h-28 w-full bg-stone-200">
+                                            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80" alt="Honeymoon Bali" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/1C3F3A/D4A373?text=Bali+Honeymoon'">
+                                            <span class="absolute top-2 right-2 bg-rose-500 text-white font-bold text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider">Terpopuler</span>
+                                        </div>
+                                        <div class="p-3 space-y-2">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h5 class="text-xs font-bold text-bali-dark">1. Romantic Honeymoon Gateaway</h5>
+                                                    <p class="text-[9px] text-stone-500 mt-0.5">Bundling Kamar Villa, Spa & Airport Service</p>
+                                                </div>
+                                            </div>
+                                            <ul class="text-[9px] text-stone-600 space-y-1 list-disc list-inside border-t border-stone-200/60 pt-1.5">
+                                                <li>3 Malam One Bedroom Pool Villa</li>
+                                                <li>1 Sesi Volcanic Clay Body Wrap (120 Mnt)</li>
+                                                <li>Toyota Avanza + Supir (3 Hari)</li>
+                                            </ul>
+                                            <div class="flex justify-between items-center pt-1 border-t border-stone-200/60">
+                                                <div>
+                                                    <span class="text-[9px] text-stone-400 line-through">Rp 11.200.000</span>
+                                                    <span class="text-xs font-bold text-bali-accent block">Rp 9.500.000</span>
+                                                </div>
+                                                <button onclick="addBundleToItinerary('honeymoon')" class="bg-bali-emerald hover:bg-bali-dark text-white font-bold text-[10px] px-3 py-1.5 rounded-lg transition">
+                                                    Pilih Paket
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Digital Nomad Package Card -->
+                                    <div class="border border-stone-150 rounded-2xl overflow-hidden bg-stone-50">
+                                        <div class="relative h-28 w-full bg-stone-200">
+                                            <img src="https://images.unsplash.com/photo-1488901512066-cd403111aeb2?auto=format&fit=crop&w=600&q=80" alt="Nomad Bali" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/1C3F3A/D4A373?text=Nomad+Bali'">
+                                            <span class="absolute top-2 right-2 bg-emerald-600 text-white font-bold text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider">Sangat Hemat</span>
+                                        </div>
+                                        <div class="p-3 space-y-2">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h5 class="text-xs font-bold text-bali-dark">2. Surf & Digital Nomad Escape</h5>
+                                                    <p class="text-[9px] text-stone-500 mt-0.5">Sempurna untuk kerja remote & berselancar</p>
+                                                </div>
+                                            </div>
+                                            <ul class="text-[9px] text-stone-600 space-y-1 list-disc list-inside border-t border-stone-200/60 pt-1.5">
+                                                <li>5 Malam Ubud Valley Forest Cabin</li>
+                                                <li>5 Hari Sewa Motor Yamaha NMAX</li>
+                                                <li>Sesi Trekking Sunrise Gunung Batur (2 Pax)</li>
+                                            </ul>
+                                            <div class="flex justify-between items-center pt-1 border-t border-stone-200/60">
+                                                <div>
+                                                    <span class="text-[9px] text-stone-400 line-through">Rp 11.600.000</span>
+                                                    <span class="text-xs font-bold text-bali-accent block">Rp 9.900.000</span>
+                                                </div>
+                                                <button onclick="addBundleToItinerary('nomad')" class="bg-bali-emerald hover:bg-bali-dark text-white font-bold text-[10px] px-3 py-1.5 rounded-lg transition">
+                                                    Pilih Paket
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <!-- FORM 1: ROOM BOOKING -->
+                            <div id="form-room" class="space-y-4 hidden">
+                                <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+                                    <h4 class="text-sm font-bold text-bali-emerald"><i class="fa-solid fa-bed mr-1 text-bali-clay"></i> Reservasi Kamar Hotel/Villa</h4>
+                                    <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded">Nightly-Based</span>
+                                </div>
+                                
+                                <!-- Dynamic Preview Image -->
+                                <div class="relative h-32 rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
+                                    <img id="room-preview-img" src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" alt="Room View" class="w-full h-full object-cover preview-img" onerror="this.src='https://placehold.co/600x400/1C3F3A/D4A373?text=Bali+Resort'">
+                                    <span id="room-price-badge" class="absolute bottom-2 right-2 bg-bali-dark/80 text-bali-clay font-bold text-[11px] px-2.5 py-1 rounded-lg">Rp 2.400.000/malam</span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Pilih Tipe Kamar</label>
+                                    <select id="room-type" onchange="updateRoomPreview()" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-bali-clay outline-none">
+                                        <option value="One Bedroom Pool Villa" data-price="2400000" data-img="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80">One Bedroom Pool Villa — Rp 2.400.000/night</option>
+                                        <option value="Two Bedroom Family Suite" data-price="3500000" data-img="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80">Two Bedroom Family Suite — Rp 3.500.000/night</option>
+                                        <option value="Ubud Valley Forest Cabin" data-price="1800000" data-img="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80">Ubud Valley Forest Cabin — Rp 1.800.000/night</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Check-in</label>
+                                        <input type="date" id="room-checkin" value="2026-06-22" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Check-out</label>
+                                        <input type="date" id="room-checkout" value="2026-06-25" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Jumlah Kamar</label>
+                                        <select id="room-qty" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                            <option value="1">1 Unit</option>
+                                            <option value="2">2 Unit</option>
+                                            <option value="3">3 Unit</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Jumlah Tamu</label>
+                                        <select id="room-guests" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                            <option value="2">2 Dewasa</option>
+                                            <option value="4">4 Dewasa</option>
+                                            <option value="1">1 Dewasa</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button onclick="addItemToItinerary('room')" class="w-full bg-bali-emerald hover:bg-bali-dark text-white font-bold py-2.5 rounded-xl text-xs transition duration-150 flex items-center justify-center space-x-1 shadow-md">
+                                    <i class="fa-solid fa-plus-circle text-sm text-bali-clay"></i>
+                                    <span>Tambahkan ke Itinerary</span>
+                                </button>
+                            </div>
+
+                            <!-- FORM 2: VEHICLE BOOKING -->
+                            <div id="form-car" class="space-y-4 hidden">
+                                <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+                                    <h4 class="text-sm font-bold text-bali-emerald"><i class="fa-solid fa-car mr-1 text-bali-clay"></i> Sewa Motor / Mobil</h4>
+                                    <span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded">Duration-Based</span>
+                                </div>
+
+                                <!-- Dynamic Preview Image -->
+                                <div class="relative h-32 rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
+                                    <img id="car-preview-img" src="https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&w=600&q=80" alt="Vehicle View" class="w-full h-full object-cover preview-img" onerror="this.src='https://placehold.co/600x400/1C3F3A/D4A373?text=Scooter+Bali'">
+                                    <span id="car-price-badge" class="absolute bottom-2 right-2 bg-bali-dark/80 text-bali-clay font-bold text-[11px] px-2.5 py-1 rounded-lg">Rp 120.000/hari</span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Pilih Armada</label>
+                                    <select id="car-type" onchange="updateCarPreview()" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-bali-clay outline-none">
+                                        <option value="Scooter Honda Fazzio" data-price="120000" data-img="https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&w=600&q=80">Scooter Honda Fazzio — Rp 120.000/hari</option>
+                                        <option value="Yamaha NMAX 155" data-price="200000" data-img="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80">Yamaha NMAX 155 — Rp 200.000/hari</option>
+                                        <option value="Toyota Avanza + Supir" data-price="850000" data-img="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80">Avanza + Driver + Petrol — Rp 850.000/hari</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Tgl Mulai Sewa</label>
+                                        <input type="date" id="car-start-date" value="2026-06-22" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Tgl Selesai Sewa</label>
+                                        <input type="date" id="car-end-date" value="2026-06-25" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Jam Ambil</label>
+                                        <select id="car-pickup-time" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs outline-none">
+                                            <option value="09:00">09:00 WITA</option>
+                                            <option value="12:00">12:00 WITA</option>
+                                            <option value="17:00">17:00 WITA</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Lokasi Serah Terima</label>
+                                        <select id="car-location" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs outline-none">
+                                            <option value="Bandara Ngurah Rai">Bandara (DPS)</option>
+                                            <option value="Hotel/Villa">Lobi Hotel / Villa</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button onclick="addItemToItinerary('car')" class="w-full bg-bali-emerald hover:bg-bali-dark text-white font-bold py-2.5 rounded-xl text-xs transition duration-150 flex items-center justify-center space-x-1 shadow-md">
+                                    <i class="fa-solid fa-plus-circle text-sm text-bali-clay"></i>
+                                    <span>Tambahkan Kendaraan</span>
+                                </button>
+                            </div>
+
+                            <!-- FORM 3: ACTIVITY BOOKING -->
+                            <div id="form-activity" class="space-y-4 hidden">
+                                <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+                                    <h4 class="text-sm font-bold text-bali-emerald"><i class="fa-solid fa-mountain mr-1 text-bali-clay"></i> Aktivitas & Tur Harian</h4>
+                                    <span class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded">Session Capacity</span>
+                                </div>
+
+                                <!-- Dynamic Preview Image -->
+                                <div class="relative h-32 rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
+                                    <img id="activity-preview-img" src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=600&q=80" alt="Activity View" class="w-full h-full object-cover preview-img" onerror="this.src='https://placehold.co/600x400/1C3F3A/D4A373?text=Bali+Trekking'">
+                                    <span id="activity-price-badge" class="absolute bottom-2 right-2 bg-bali-dark/80 text-bali-clay font-bold text-[11px] px-2.5 py-1 rounded-lg">Rp 450.000/pax</span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Pilih Destinasi/Tur</label>
+                                    <select id="activity-type" onchange="updateActivityPreview()" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-bali-clay outline-none">
+                                        <option value="Mendaki Sunrise Gunung Batur" data-price="450000" data-img="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=600&q=80">Mt. Batur Trekking — Rp 450.000/pax</option>
+                                        <option value="Ayung River White Water Rafting" data-price="350000" data-img="https://images.unsplash.com/photo-1530731141654-5961adca3518?auto=format&fit=crop&w=600&q=80">Ayung Rafting Ubud — Rp 350.000/pax</option>
+                                        <option value="One Day Trip Nusa Penida" data-price="750000" data-img="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80">Nusa Penida Escape — Rp 750.000/pax</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Tanggal Keberangkatan</label>
+                                    <input type="date" id="activity-date" value="2026-06-23" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-1.5 text-xs outline-none">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Sesi Kunjungan</label>
+                                        <select id="activity-session" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs outline-none">
+                                            <option value="Sesi Pagi (03:30 AM)">Sesi Pagi (Subuh)</option>
+                                            <option value="Sesi Siang (09:00 AM)">Sesi Siang</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Jumlah Orang (Pax)</label>
+                                        <select id="activity-pax" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs outline-none">
+                                            <option value="2">2 Pax</option>
+                                            <option value="4">4 Pax</option>
+                                            <option value="1">1 Pax</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button onclick="addItemToItinerary('activity')" class="w-full bg-bali-emerald hover:bg-bali-dark text-white font-bold py-2.5 rounded-xl text-xs transition duration-150 flex items-center justify-center space-x-1 shadow-md">
+                                    <i class="fa-solid fa-plus-circle text-sm text-bali-clay"></i>
+                                    <span>Tambahkan Aktivitas</span>
+                                </button>
+                            </div>
+
+                            <!-- FORM 4: SPA BOOKING -->
+                            <div id="form-spa" class="space-y-4 hidden">
+                                <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+                                    <h4 class="text-sm font-bold text-bali-emerald"><i class="fa-solid fa-spa mr-1 text-bali-clay"></i> Balinese Massage & Spa</h4>
+                                    <span class="text-[10px] bg-rose-50 text-rose-700 font-bold px-2 py-0.5 rounded">Resource Time-Slot</span>
+                                </div>
+
+                                <!-- Dynamic Preview Image -->
+                                <div class="relative h-32 rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
+                                    <img id="spa-preview-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80" alt="Spa View" class="w-full h-full object-cover preview-img" onerror="this.src='https://placehold.co/600x400/1C3F3A/D4A373?text=Bali+Spa'">
+                                    <span id="spa-price-badge" class="absolute bottom-2 right-2 bg-bali-dark/80 text-bali-clay font-bold text-[11px] px-2.5 py-1 rounded-lg">Rp 350.000</span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Pilih Treatment</label>
+                                    <select id="spa-type" onchange="updateSpaPreview()" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-bali-clay outline-none">
+                                        <option value="Balinese Traditional Massage (90 Min)" data-price="350000" data-img="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80">Balinese Massage (90 Mnt) — Rp 350.000</option>
+                                        <option value="Volcanic Clay Body Wrap (120 Min)" data-price="500000" data-img="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=600&q=80">Volcanic Body Wrap (120 Mnt) — Rp 500.000</option>
+                                        <option value="Pure Flower Facial Treatment (60 Min)" data-price="250000" data-img="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=600&q=80">Flower Facial (60 Mnt) — Rp 250.000</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Tanggal Treatment</label>
+                                    <input type="date" id="spa-date" value="2026-06-24" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-1.5 text-xs outline-none">
+                                </div>
+
+                                <!-- Custom interactive time slot matrix -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Pilih Slot Jam Yang Tersedia</label>
+                                    <input type="hidden" id="spa-time" value="10:00">
+                                    <div class="grid grid-cols-4 gap-1.5" id="spa-time-slots">
+                                        <button onclick="selectSpaTime(this, '09:00')" type="button" class="py-1.5 bg-stone-100 border border-stone-200 hover:bg-stone-200 text-stone-700 rounded-lg text-[10px] font-bold transition">09:00</button>
+                                        <button onclick="selectSpaTime(this, '10:00')" type="button" class="py-1.5 bg-bali-emerald text-white border border-bali-emerald rounded-lg text-[10px] font-bold transition">10:00</button>
+                                        <button onclick="selectSpaTime(this, '13:00')" type="button" class="py-1.5 bg-stone-100 border border-stone-200 hover:bg-stone-200 text-stone-700 rounded-lg text-[10px] font-bold transition">13:00</button>
+                                        <button onclick="selectSpaTime(this, '15:30')" type="button" class="py-1.5 bg-stone-100 text-stone-400 border border-stone-100 cursor-not-allowed rounded-lg text-[10px] font-bold transition" disabled title="Terapis Sedang Melayani">15:30 🚫</button>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Preferensi Ruangan</label>
+                                        <select id="spa-room" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs outline-none">
+                                            <option value="Garden View Room">Garden view</option>
+                                            <option value="Couple Room">Couple room (+100k)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-stone-500 uppercase mb-1">Preferensi Staf</label>
+                                        <select id="spa-therapist" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs outline-none">
+                                            <option value="Any Female Therapist">Terapis Wanita</option>
+                                            <option value="Any Male Therapist">Terapis Pria</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button onclick="addItemToItinerary('spa')" class="w-full bg-bali-emerald hover:bg-bali-dark text-white font-bold py-2.5 rounded-xl text-xs transition duration-150 flex items-center justify-center space-x-1 shadow-md">
+                                    <i class="fa-solid fa-plus-circle text-sm text-bali-clay"></i>
+                                    <span>Tambahkan Sesi Spa</span>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <!-- DYNAMIC ITINERARY TIMELINE (The Shopping Cart) -->
+                        <div id="itinerary-section" class="space-y-3 pt-2">
+                            <div class="flex justify-between items-end px-1">
+                                <div>
+                                    <h4 class="text-sm font-bold text-bali-dark">Rencana Itinerary Anda</h4>
+                                    <p class="text-[10px] text-stone-500">Urutan perjalanan Anda di Bali</p>
+                                </div>
+                                <span class="text-[10px] font-bold text-bali-emerald bg-stone-200/60 px-2 py-0.5 rounded-full" id="timeline-count">0 Item</span>
+                            </div>
+
+                            <!-- Empty Cart Placeholder state -->
+                            <div id="cart-empty-placeholder" class="bg-white rounded-3xl p-8 border border-dashed border-stone-300 text-center space-y-2">
+                                <div class="w-12 h-12 bg-stone-50 text-stone-400 rounded-full flex items-center justify-center mx-auto">
+                                    <i class="fa-solid fa-route text-xl"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-stone-700">Belum Ada Item Pemesanan</h5>
+                                <p class="text-[10px] text-stone-400 px-4">Pilih paket jadi di atas atau tambahkan secara custom melalui tab Kamar, Armada, Tur, atau Spa.</p>
+                            </div>
+
+                            <!-- Timeline List Container -->
+                            <div id="timeline-list" class="relative pl-4 space-y-4 border-l border-stone-300/60 ml-2 hidden">
+                                <!-- Dynamic item cards injected here by JS -->
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Sticky Bottom Action Bar inside Phone -->
+                    <div class="absolute bottom-0 inset-x-0 bg-white border-t border-stone-100 p-4 rounded-b-[38px] shadow-2xl flex justify-between items-center z-40">
+                        <div>
+                            <span class="text-[10px] text-stone-500 font-bold uppercase block">Estimasi Total Biaya:</span>
+                            <span id="grand-total-amount" class="text-base font-bold text-bali-emerald">Rp 0</span>
+                        </div>
+                        <button onclick="triggerCheckout()" id="checkout-btn" disabled class="bg-stone-300 text-stone-500 font-bold px-6 py-2.5 rounded-xl text-xs transition flex items-center space-x-1 cursor-not-allowed">
+                            <span>Bayar Sekarang</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL POPUP: Booking Confirmation Receipt -->
+    <div id="receipt-modal" class="fixed inset-0 bg-black/75 z-[999] flex items-center justify-center p-4 hidden">
+        <div class="bg-bali-sand w-full max-w-sm rounded-[32px] p-6 text-stone-800 space-y-4 max-h-[90vh] overflow-y-auto border border-stone-200 shadow-2xl">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="font-serif text-xl font-bold text-bali-emerald">Booking Sukses!</h3>
+                <p class="text-xs text-stone-500">Booking ID: <span class="font-mono text-stone-800 font-bold" id="receipt-booking-id">ST-2026-64903</span></p>
+            </div>
+
+            <!-- Receipt Breakdown -->
+            <div class="bg-white rounded-2xl p-4 border border-stone-200/60 space-y-3">
+                <div class="text-[10px] font-bold text-stone-500 border-b pb-1.5 uppercase">Detail Tagihan Terkonsolidasi</div>
+                <div class="space-y-2 text-xs" id="receipt-items-list">
+                    <!-- Dynamic details -->
+                </div>
+                <div class="border-t pt-2 mt-2 flex justify-between font-bold text-bali-emerald text-sm">
+                    <span>Total Pembayaran (Pajak Inc.)</span>
+                    <span id="receipt-total-amount">Rp 0</span>
+                </div>
+            </div>
+
+            <div class="bg-emerald-950 text-emerald-100 p-3 rounded-2xl flex items-center space-x-3 text-[11px] border border-emerald-900">
+                <i class="fa-solid fa-wifi text-base text-bali-clay animate-pulse"></i>
+                <div>
+                    <h5 class="font-bold text-white">Bonus eSIM Bali Aktif!</h5>
+                    <p class="text-[10px] text-emerald-300">Kuota internet 15GB dikirim langsung via WhatsApp.</p>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-1">
+                <button onclick="closeReceipt()" class="w-full bg-bali-emerald text-white font-bold py-2.5 rounded-xl text-xs hover:bg-bali-dark transition">
+                    Selesai & Tutup Simulator
+                </button>
+                <p class="text-[9px] text-center text-stone-400">Kode verifikasi & E-Voucher akan dikirim otomatis ke email dan nomor telepon Anda.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page footer -->
+    <footer class="bg-stone-950 text-stone-600 text-[11px] text-center py-3 border-t border-stone-900 shrink-0">
+        <p>© 2026 Santi Bali Unified Booking Engine Simulator. Menggunakan HTML5, Vanilla JS, dan Tailwind CSS.</p>
+    </footer>
+
+    <!-- JAVASCRIPT: LOGIC, IMAGES, & REACTIVITY -->
+    <script>
+        // Global State variables representing client-side cart data
+        let activeTab = 'packages';
+        let cart = [];
+        let grandTotal = 0;
+
+        // On Load initialization
+        window.onload = function() {
+            updateJSONPreview();
+            renderTimeline();
+            // Trigger early state loading for preview images
+            updateRoomPreview();
+            updateCarPreview();
+            updateActivityPreview();
+            updateSpaPreview();
+        }
+
+        // Dropdown dynamic image visualizer
+        function updateRoomPreview() {
+            const select = document.getElementById('room-type');
+            const opt = select.options[select.selectedIndex];
+            const imgUrl = opt.getAttribute('data-img');
+            const price = parseFloat(opt.getAttribute('data-price'));
+            
+            document.getElementById('room-preview-img').src = imgUrl;
+            document.getElementById('room-price-badge').textContent = `Rp ${price.toLocaleString('id-ID')}/malam`;
+        }
+
+        function updateCarPreview() {
+            const select = document.getElementById('car-type');
+            const opt = select.options[select.selectedIndex];
+            const imgUrl = opt.getAttribute('data-img');
+            const price = parseFloat(opt.getAttribute('data-price'));
+            
+            document.getElementById('car-preview-img').src = imgUrl;
+            document.getElementById('car-price-badge').textContent = `Rp ${price.toLocaleString('id-ID')}/hari`;
+        }
+
+        function updateActivityPreview() {
+            const select = document.getElementById('activity-type');
+            const opt = select.options[select.selectedIndex];
+            const imgUrl = opt.getAttribute('data-img');
+            const price = parseFloat(opt.getAttribute('data-price'));
+            
+            document.getElementById('activity-preview-img').src = imgUrl;
+            document.getElementById('activity-price-badge').textContent = `Rp ${price.toLocaleString('id-ID')}/pax`;
+        }
+
+        function updateSpaPreview() {
+            const select = document.getElementById('spa-type');
+            const opt = select.options[select.selectedIndex];
+            const imgUrl = opt.getAttribute('data-img');
+            const price = parseFloat(opt.getAttribute('data-price'));
+            
+            document.getElementById('spa-preview-img').src = imgUrl;
+            document.getElementById('spa-price-badge').textContent = `Rp ${price.toLocaleString('id-ID')}`;
+        }
+
+        // Tab Switcher Controller
+        function switchTab(tabId) {
+            // Hide all form panels
+            document.getElementById('form-packages').classList.add('hidden');
+            document.getElementById('form-room').classList.add('hidden');
+            document.getElementById('form-car').classList.add('hidden');
+            document.getElementById('form-activity').classList.add('hidden');
+            document.getElementById('form-spa').classList.add('hidden');
+
+            // Reset tab styles to inactive
+            const tabs = ['packages', 'room', 'car', 'activity', 'spa'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                el.className = "flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 text-stone-400 transition-all duration-200 hover:text-stone-700";
+            });
+
+            // Show selected form and set tab as active (Emerald accent style)
+            document.getElementById(`form-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).className = "flex-1 min-w-[70px] py-2 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-all duration-200 bg-bali-emerald text-white shadow-sm";
+            
+            activeTab = tabId;
+        }
+
+        // Helper function to handle spa time slot selection
+        function selectSpaTime(btn, time) {
+            const container = document.getElementById('spa-time-slots');
+            const buttons = container.getElementsByTagName('button');
+            for (let b of buttons) {
+                if (!b.disabled) {
+                    b.className = "py-1.5 bg-stone-100 border border-stone-200 hover:bg-stone-200 text-stone-700 rounded-lg text-[10px] font-bold transition";
+                }
+            }
+            btn.className = "py-1.5 bg-bali-emerald text-white border border-bali-emerald rounded-lg text-[10px] font-bold transition";
+            document.getElementById('spa-time').value = time;
+        }
+
+        // Helper: Calculate days between dates
+        function getDaysDiff(date1Str, date2Str) {
+            const d1 = new Date(date1Str);
+            const d2 = new Date(date2Str);
+            const diffTime = Math.abs(d2 - d1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays || 1;
+        }
+
+        // Add Pre-made Packages to Itinerary
+        function addBundleToItinerary(bundleType) {
+            // Clean up cart first for clean showcase demo
+            cart = [];
+            
+            if (bundleType === 'honeymoon') {
+                cart.push({
+                    id: 'bundle-room-' + Date.now(),
+                    type: 'room',
+                    title: 'One Bedroom Pool Villa (Honeymoon Pack)',
+                    price: 7200000, // Discounted from 2.4m * 3 = 7.2m (Included in package)
+                    description: '3 Malam • 1 Kamar • 2 Tamu',
+                    icon: 'fa-bed',
+                    color: 'border-emerald-500',
+                    metadata: {
+                        room_type: 'One Bedroom Pool Villa',
+                        check_in: '2026-06-22',
+                        check_out: '2026-06-25',
+                        total_nights: 3,
+                        quantity: 1,
+                        package_bound: 'Romantic Honeymoon'
+                    }
+                });
+
+                cart.push({
+                    id: 'bundle-spa-' + Date.now(),
+                    type: 'spa',
+                    title: 'Volcanic Clay Body Wrap (Couple Service)',
+                    price: 800000, // Discounted from 1m
+                    description: 'Tgl 24 Juni @ 13:00 WITA • Couple Room • 2 Terapis',
+                    icon: 'fa-spa',
+                    color: 'border-rose-500',
+                    metadata: {
+                        treatment_type: 'Volcanic Clay Body Wrap (120 Min)',
+                        booking_date: '2026-06-24',
+                        time_slot: '13:00',
+                        room_preference: 'Couple Room',
+                        package_bound: 'Romantic Honeymoon'
+                    }
+                });
+
+                cart.push({
+                    id: 'bundle-car-' + Date.now(),
+                    type: 'car',
+                    title: 'Toyota Avanza + Supir (Honeymoon Transport)',
+                    price: 1500000, // Discounted from 850k * 3
+                    description: '3 Hari • Bandara Pick-up • Driver Terakreditasi',
+                    icon: 'fa-car',
+                    color: 'border-amber-500',
+                    metadata: {
+                        vehicle_type: 'Toyota Avanza + Supir',
+                        rental_start: '2026-06-22',
+                        rental_end: '2026-06-25',
+                        total_days: 3,
+                        package_bound: 'Romantic Honeymoon'
+                    }
+                });
+
+                showToast("Paket Honeymoon berhasil diterapkan!");
+            } 
+            else if (bundleType === 'nomad') {
+                cart.push({
+                    id: 'bundle-room-' + Date.now(),
+                    type: 'room',
+                    title: 'Ubud Valley Forest Cabin (Nomad Pack)',
+                    price: 7500000, // 5 nights discounted
+                    description: '5 Malam • 1 Kamar • 1 Tamu',
+                    icon: 'fa-bed',
+                    color: 'border-emerald-500',
+                    metadata: {
+                        room_type: 'Ubud Valley Forest Cabin',
+                        check_in: '2026-06-22',
+                        check_out: '2026-06-27',
+                        total_nights: 5,
+                        package_bound: 'Digital Nomad Escape'
+                    }
+                });
+
+                cart.push({
+                    id: 'bundle-car-' + Date.now(),
+                    type: 'car',
+                    title: 'Yamaha NMAX 155 (Nomad Bike)',
+                    price: 800000, // 5 days discounted
+                    description: '5 Hari • Serah Terima Villa • Termasuk Helm & Jas Hujan',
+                    icon: 'fa-car',
+                    color: 'border-amber-500',
+                    metadata: {
+                        vehicle_type: 'Yamaha NMAX 155',
+                        rental_start: '2026-06-22',
+                        rental_end: '2026-06-27',
+                        total_days: 5,
+                        package_bound: 'Digital Nomad Escape'
+                    }
+                });
+
+                cart.push({
+                    id: 'bundle-act-' + Date.now(),
+                    type: 'activity',
+                    title: 'Mendaki Sunrise Gunung Batur (Nomad Adventure)',
+                    price: 1600000, // 4 pax discounted
+                    description: '2 Pax • Tgl 24 Juni • Sesi Subuh (03:30 AM)',
+                    icon: 'fa-mountain',
+                    color: 'border-indigo-500',
+                    metadata: {
+                        activity_name: 'Mendaki Sunrise Gunung Batur',
+                        booking_date: '2026-06-24',
+                        session_time: 'Sesi Pagi (03:30 AM)',
+                        pax_count: 2,
+                        package_bound: 'Digital Nomad Escape'
+                    }
+                });
+
+                showToast("Paket Nomad berhasil diterapkan!");
+            }
+
+            updateCartCounter();
+            renderTimeline();
+            updateJSONPreview();
+            scrollToCart();
+        }
+
+        // Add custom item to dynamic itinerary builder
+        function addItemToItinerary(type) {
+            let item = { id: Date.now().toString(), type: type };
+
+            if (type === 'room') {
+                const roomSelect = document.getElementById('room-type');
+                const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+                const pricePerNight = parseFloat(selectedOption.getAttribute('data-price'));
+                const checkIn = document.getElementById('room-checkin').value;
+                const checkOut = document.getElementById('room-checkout').value;
+                const nights = getDaysDiff(checkIn, checkOut);
+                const qty = parseInt(document.getElementById('room-qty').value);
+                const guests = document.getElementById('room-guests').value;
+                
+                item.title = selectedOption.value;
+                item.price = pricePerNight * nights * qty;
+                item.description = `${nights} Malam • ${qty} Kamar • ${guests} Tamu`;
+                item.icon = 'fa-bed';
+                item.color = 'border-emerald-500';
+                item.metadata = {
+                    room_type: selectedOption.value,
+                    check_in: checkIn,
+                    check_out: checkOut,
+                    total_nights: nights,
+                    quantity: qty,
+                    guests_count: guests,
+                    price_per_night: pricePerNight
+                };
+            }
+            else if (type === 'car') {
+                const carSelect = document.getElementById('car-type');
+                const selectedOption = carSelect.options[carSelect.selectedIndex];
+                const pricePerDay = parseFloat(selectedOption.getAttribute('data-price'));
+                const startDate = document.getElementById('car-start-date').value;
+                const endDate = document.getElementById('car-end-date').value;
+                const days = getDaysDiff(startDate, endDate);
+                const pickupTime = document.getElementById('car-pickup-time').value;
+                const location = document.getElementById('car-location').value;
+
+                item.title = selectedOption.value;
+                item.price = pricePerDay * days;
+                item.description = `${days} Hari • Ambil Jam ${pickupTime} • Di ${location}`;
+                item.icon = 'fa-car';
+                item.color = 'border-amber-500';
+                item.metadata = {
+                    vehicle_type: selectedOption.value,
+                    rental_start: startDate,
+                    rental_end: endDate,
+                    total_days: days,
+                    pickup_time: pickupTime,
+                    pickup_location: location,
+                    price_per_day: pricePerDay
+                };
+            }
+            else if (type === 'activity') {
+                const actSelect = document.getElementById('activity-type');
+                const selectedOption = actSelect.options[actSelect.selectedIndex];
+                const pricePerPax = parseFloat(selectedOption.getAttribute('data-price'));
+                const date = document.getElementById('activity-date').value;
+                const session = document.getElementById('activity-session').value;
+                const pax = parseInt(document.getElementById('activity-pax').value);
+
+                item.title = selectedOption.value;
+                item.price = pricePerPax * pax;
+                item.description = `${pax} Pax • Tgl ${date} • ${session}`;
+                item.icon = 'fa-mountain';
+                item.color = 'border-indigo-500';
+                item.metadata = {
+                    activity_name: selectedOption.value,
+                    booking_date: date,
+                    session_time: session,
+                    pax_count: pax,
+                    price_per_pax: pricePerPax
+                };
+            }
+            else if (type === 'spa') {
+                const spaSelect = document.getElementById('spa-type');
+                const selectedOption = spaSelect.options[spaSelect.selectedIndex];
+                const price = parseFloat(selectedOption.getAttribute('data-price'));
+                const date = document.getElementById('spa-date').value;
+                const time = document.getElementById('spa-time').value;
+                const room = document.getElementById('spa-room').value;
+                const therapist = document.getElementById('spa-therapist').value;
+
+                item.title = selectedOption.value;
+                item.price = price;
+                item.description = `Tgl ${date} @ ${time} WITA • ${room} • ${therapist}`;
+                item.icon = 'fa-spa';
+                item.color = 'border-rose-500';
+                item.metadata = {
+                    treatment_type: selectedOption.value,
+                    booking_date: date,
+                    time_slot: time,
+                    room_preference: room,
+                    therapist_preference: therapist,
+                    base_price: price
+                };
+            }
+
+            // Push to internal cart state
+            cart.push(item);
+            
+            // Re-render, update prices, and notify user
+            updateCartCounter();
+            renderTimeline();
+            updateJSONPreview();
+            
+            showToast(`Ditambahkan ke rencana Itinerary Anda.`);
+        }
+
+        // Remove item from state
+        function removeItem(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartCounter();
+            renderTimeline();
+            updateJSONPreview();
+            showToast("Item dihapus.");
+        }
+
+        // Reset all booking parameters
+        function clearCart() {
+            cart = [];
+            updateCartCounter();
+            renderTimeline();
+            updateJSONPreview();
+            showToast("Itinerary berhasil dikosongkan.");
+        }
+
+        // Calculate and refresh UI price states
+        function updateCartCounter() {
+            const count = cart.length;
+            const badge = document.getElementById('cart-badge');
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+                document.getElementById('checkout-btn').removeAttribute('disabled');
+                document.getElementById('checkout-btn').className = "bg-bali-clay hover:bg-bali-accent text-bali-dark font-bold px-6 py-2.5 rounded-xl text-xs transition flex items-center space-x-1 cursor-pointer shadow-md";
+            } else {
+                badge.classList.add('hidden');
+                document.getElementById('checkout-btn').setAttribute('disabled', 'true');
+                document.getElementById('checkout-btn').className = "bg-stone-300 text-stone-500 font-bold px-6 py-2.5 rounded-xl text-xs transition flex items-center space-x-1 cursor-not-allowed";
+            }
+
+            document.getElementById('timeline-count').textContent = `${count} Item`;
+            
+            // Calculate sum
+            grandTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('grand-total-amount').textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+        }
+
+        // Format currency helper
+        function formatIDR(amount) {
+            return `Rp ${amount.toLocaleString('id-ID')}`;
+        }
+
+        // Render vertical timeline
+        function renderTimeline() {
+            const listContainer = document.getElementById('timeline-list');
+            const placeholder = document.getElementById('cart-empty-placeholder');
+
+            if (cart.length === 0) {
+                listContainer.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                return;
+            }
+
+            placeholder.classList.add('hidden');
+            listContainer.classList.remove('hidden');
+            listContainer.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                const node = document.createElement('div');
+                node.className = "relative pl-6 pb-2 last:pb-0";
+                node.innerHTML = `
+                    <!-- Timeline Dot Indicator -->
+                    <span class="absolute -left-[29px] top-1 bg-white border-2 ${item.color} text-stone-800 w-6 h-6 rounded-full flex items-center justify-center text-[10px] z-10 shadow-sm">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </span>
+                    <!-- Item Card body -->
+                    <div class="bg-white p-3 rounded-2xl border border-stone-200/60 shadow-sm hover:shadow transition duration-200 flex justify-between items-start">
+                        <div class="space-y-1 pr-2">
+                            <span class="text-[9px] font-mono text-stone-400 block">Item #${index + 1} — ${item.type.toUpperCase()}</span>
+                            <h5 class="text-xs font-bold text-bali-dark leading-tight">${item.title}</h5>
+                            <p class="text-[10px] text-stone-500 leading-normal">${item.description}</p>
+                            <span class="text-xs font-bold text-bali-clay block mt-1">${formatIDR(item.price)}</span>
+                        </div>
+                        <button onclick="removeItem('${item.id}')" class="text-stone-300 hover:text-red-500 transition p-1 text-xs" title="Hapus Item">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(node);
+            });
+        }
+
+        // Update JSON dynamic panel on the left
+        function updateJSONPreview() {
+            const preview = document.getElementById('json-preview');
+            const output = {
+                transaction_metadata: {
+                    source: "Santi Bali Unified Booking System",
+                    currency: "IDR",
+                    created_at: "2026-06-20T08:26:00Z",
+                    total_items: cart.length,
+                    checkout_grand_total: grandTotal
+                },
+                itinerary_cart: cart.map(item => ({
+                    id: item.id,
+                    service_vertical: item.type,
+                    display_title: item.title,
+                    computed_subtotal: item.price,
+                    structured_payload: item.metadata
+                }))
+            };
+
+            preview.textContent = JSON.stringify(output, null, 2);
+        }
+
+        // Custom animated phone toast alert
+        function showToast(message) {
+            const toast = document.getElementById('toast-banner');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.textContent = message;
+            
+            toast.classList.remove('-translate-y-28');
+            toast.classList.add('translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0');
+                toast.classList.add('-translate-y-28');
+            }, 3000);
+        }
+
+        // Navigation scroll helper
+        function scrollToCart() {
+            const container = document.getElementById('phone-scroll-container');
+            const target = document.getElementById('itinerary-section');
+            container.scrollTo({
+                top: target.offsetTop - 20,
+                behavior: 'smooth'
+            });
+        }
+
+        // Trigger payment checkout
+        function triggerCheckout() {
+            const receiptList = document.getElementById('receipt-items-list');
+            receiptList.innerHTML = '';
+
+            cart.forEach(item => {
+                const el = document.createElement('div');
+                el.className = "flex justify-between items-center py-1 border-b border-stone-100 last:border-0";
+                el.innerHTML = `
+                    <div class="pr-2">
+                        <span class="font-bold text-stone-800 text-xs block leading-tight">${item.title}</span>
+                        <span class="text-[9px] text-stone-400 block">${item.description}</span>
+                    </div>
+                    <span class="font-mono text-stone-700 text-xs shrink-0">${formatIDR(item.price)}</span>
+                `;
+                receiptList.appendChild(el);
+            });
+
+            // Generate a random dynamic Booking ID for realism
+            const randomId = "ST-2026-" + Math.floor(10000 + Math.random() * 90000);
+            document.getElementById('receipt-booking-id').textContent = randomId;
+
+            document.getElementById('receipt-total-amount').textContent = formatIDR(grandTotal);
+            document.getElementById('receipt-modal').classList.remove('hidden');
+        }
+
+        // Close transaction modal
+        function closeReceipt() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+            clearCart();
+        }
+    </script>
+</body>
+</html>
